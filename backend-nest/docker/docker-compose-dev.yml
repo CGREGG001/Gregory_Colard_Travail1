@@ -1,0 +1,35 @@
+services:
+    # Databases
+    postgresql:
+        image: postgres:14.0-alpine
+        environment:
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_USER: postgres
+            POSTGRES_DB: BidaNest
+        ports:
+            - '5432:5432'
+        volumes:
+            - bida_nest_db:/var/lib/postgresql/data:z #:z pour la gestion des droit SELinux
+ 
+    #API
+    api:
+        build:
+            context: ./dev
+            dockerfile: Dockerfile
+        ports:
+            - '3000:3000'
+        env_file:
+            - ./dev/.env-dev
+            #- ../.env
+        volumes:
+            - ..:/api
+        depends_on:
+            - postgresql
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://localhost:3000/docs']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    bida_nest_db:
