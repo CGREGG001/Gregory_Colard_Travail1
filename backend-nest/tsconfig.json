@@ -16,6 +16,7 @@
     "baseUrl": "./src",
     "paths": {
       "@core/*": ["./core/*"],
+      "@member/*": ["./features/member/*"],
     },
     "incremental": true,
     "skipLibCheck": true,
