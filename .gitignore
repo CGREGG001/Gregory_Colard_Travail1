@@ -51,7 +51,7 @@ appsettings.Development.json
 # SÉCURITÉ (À NE JAMAIS COMMITER)
 # -----------------------------------------------------------------------
 .env
-.env-dev
+.env.dev
 .env.local
 .env.*.local
 *.pem
