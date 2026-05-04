@@ -7,12 +7,10 @@
  * Documentation: https://typeorm.io/migrations
  */
 import { DataSource } from 'typeorm';
-import { configManager } from '@core/config';
+import { configManager } from '@core/config/config.manager';
 import { DataSourceOptions } from 'typeorm';
 
 // We retrieve the config and cast it to DataSourceOptions
 export const connectionSource = new DataSource(
     configManager.getTypeOrmConfig() as DataSourceOptions,
 );
-
-export default connectionSource;
