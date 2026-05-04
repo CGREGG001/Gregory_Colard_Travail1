@@ -17,7 +17,12 @@ import { Member } from '@member/entities';
  */
 @Entity('credential')
 export class Credential {
-    @PrimaryColumn('varchar', { length: 26 })
+    @PrimaryColumn({
+        type: 'varchar',
+        length: 26,
+        name: 'credential_id', // name of the column PK
+        primaryKeyConstraintName: 'pk_credential' // explicite name of the PK
+    })
     id!: string;
 
     @BeforeInsert()
@@ -47,6 +52,9 @@ export class Credential {
      * @JoinColumn indicates that this table has the foreign key (user_id).
      */
     @OneToOne(() => Member, (member) => member.credential, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'member_id' }) // FK(member_id)
+    @JoinColumn({ 
+        name: 'member_id',
+        foreignKeyConstraintName: 'fk_credential_member'
+    }) // FK(member_id)
     member!: Member;
 }

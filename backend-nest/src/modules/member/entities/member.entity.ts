@@ -23,7 +23,12 @@ import { MemberRole } from '@member/enums';
  */
 @Entity('member')
 export class Member {
-    @PrimaryColumn('varchar', { length: 26 })
+    @PrimaryColumn({
+        type: 'varchar',
+        length: 26,
+        name: 'member_id', // name of the column PK
+        primaryKeyConstraintName: 'pk_member' // explicite name of the PK
+    })
     id!: string;
 
     @BeforeInsert()

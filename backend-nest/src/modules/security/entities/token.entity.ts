@@ -14,7 +14,12 @@ import { Credential } from './credential.entity';
  */
 @Entity('token')
 export class Token {
-    @PrimaryColumn('varchar', { length: 26 })
+    @PrimaryColumn({
+        type: 'varchar',
+        length: 26,
+        name: 'token_id', // name of the column PK
+        primaryKeyConstraintName: 'pk_token' // explicite name of the PK
+    })
     id!: string;
 
     @BeforeInsert()
@@ -31,6 +36,9 @@ export class Token {
     refreshToken!: string;
 
     @OneToOne(() => Credential,{ eager: true, onDelete: 'CASCADE' })
-    @JoinColumn({name: 'credential_id'})
+    @JoinColumn({
+        name: 'credential_id',
+        foreignKeyConstraintName: 'fk_token_credential'
+    })
     credential!: Credential;
 }
