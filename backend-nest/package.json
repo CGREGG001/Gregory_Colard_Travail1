@@ -18,13 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    
     "prepare": "husky",
-
-    "migration:generate": "typeorm-ts-node-commonjs migration:generate src/migrations -d src/data-source.ts",
-    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
-    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/data-source.ts",
-
+    "migration:generate": "cross-env NODE_ENV=dev node -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:generate -d src/core/config/data-source.ts",
+    "migration:run": "cross-env NODE_ENV=dev node -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:run -d src/core/config/data-source.ts",
+    "migration:revert": "cross-env NODE_ENV=dev node -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:revert -d src/core/config/data-source.ts",
     "docker:dev": "docker compose -f docker/docker-compose.dev.yml --env-file .env.dev up",
     "docker:stop": "docker compose -f docker/docker-compose.dev.yml --env-file .env.dev down"
   },
@@ -72,6 +69,7 @@
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.57.2",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
