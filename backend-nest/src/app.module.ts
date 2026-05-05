@@ -1,18 +1,21 @@
-import { CredentialService } from './modules/security/services/credential.service';
-import { AuthService } from './modules/security/services/auth.service';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AccountController } from './modules/account/account.controller';
-import { AccountService } from './modules/account/account.service';
-import { MemberService } from './modules/member/services/member.service';
-import { MemberController } from './modules/member/member.controller';
+import { configManager } from '@core/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { MemberModule } from '@member/member.module';
+import { SecurityModule } from '@security/security.module';
+import { AccountModule } from '@account/account.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController, AccountController, MemberController],
-  providers: [
-    CredentialService,
-    AuthService, AppService, AccountService, MemberService],
+  imports: [
+    TypeOrmModule.forRoot(configManager.getTypeOrmConfig()),
+    MemberModule,
+    AccountModule,
+    SecurityModule
+  ],
+  controllers: [ AppController ],
+  providers: [ AppService ],
 })
 export class AppModule { }
