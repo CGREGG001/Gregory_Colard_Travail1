@@ -22,4 +22,16 @@ export class AuthController {
         return this.authService.signup(SignupDto);
     }
 
+    /**
+     * Endpoint to authenticate a member.
+     */
+    @Post('signin')
+    @HttpCode(HttpStatus.OK)
+    @ApiOperation({ summary: 'Authenticate a member' })
+    @ApiResponse({ status: 200, description: 'Authentication successful', type: Member })
+    @ApiResponse({ status: 401, description: 'Invalid credentials' })
+    @ApiBody({ type: SigninDto })
+    async signin(@Body() signinDto: SigninDto): Promise<Member> {
+        return this.authService.signin(signinDto);
+    }
 }
