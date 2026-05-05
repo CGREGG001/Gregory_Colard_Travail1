@@ -1,5 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Transactional } from 'typeorm-transactional';
+import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
 import { Member } from '@member/entities';
@@ -22,6 +23,7 @@ export class AuthService {
     constructor(
         private readonly memberService: MemberService,
         private readonly credentialService: CredentialService,
+        private readonly jwtService: JwtService
     ) {}
 
     /**
@@ -53,7 +55,7 @@ export class AuthService {
      * @param dto - The signin data transfer object containing email and password.
      * @returns The authenticated Member entity.
      */
-    async signin(dto: SigninDto): Promise<Member> {
+    async signin(dto: SigninDto): Promise<{ member: Member; accessToken: string }> {
         const member = await this.memberService.findByEmail(dto.email);
         if (!member) {
             throw new UnauthorizedException(ApiCodeResponse.INVALID_CREDENTIALS);
@@ -72,7 +74,11 @@ export class AuthService {
             throw new UnauthorizedException(ApiCodeResponse.INVALID_CREDENTIALS);
         }
 
-        // Token will come later
-        return member;
+        const payload = { sub: member.id, email: member.email };
+
+        return {
+            member,
+            accessToken: await this.jwtService.signAsync(payload),
+        };
     }
 }
