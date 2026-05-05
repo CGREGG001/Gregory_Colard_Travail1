@@ -16,8 +16,9 @@
     "baseUrl": "./src",
     "paths": {
       "@core/*": ["./core/*"],
-      "@security/*": ["./modules/security"],
+      "@security/*": ["./modules/security/*"],
       "@member/*": ["./modules/member/*"],
+      "@account/*": ["./modules/account/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
