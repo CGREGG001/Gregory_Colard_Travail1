@@ -3,7 +3,8 @@ import { AuthService } from '@security/services/auth.service';
 import { ApiOperation, ApiResponse, ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { Member } from '@member/entities';
-import { SignupDto, SigninDto } from '@security/dtos';
+import { SignupDto, SigninDto, SigninResponseDto } from '@security/dtos';
+import { MemberDto } from '@member/dtos';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -28,10 +29,16 @@ export class AuthController {
     @Post('signin')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Authenticate a member' })
-    @ApiResponse({ status: 200, description: 'Authentication successful', type: Member })
+    @ApiResponse({ status: 200, description: 'Authentication successful', type: SigninResponseDto })
     @ApiResponse({ status: 401, description: 'Invalid credentials' })
     @ApiBody({ type: SigninDto })
-    async signin(@Body() signinDto: SigninDto): Promise<Member> {
-        return this.authService.signin(signinDto);
+    async signin(@Body() signinDto: SigninDto): Promise<SigninResponseDto> {
+        const member = await this.authService.signin(signinDto);
+
+        return {
+            user: new MemberDto(member),
+            accessToken: '...', // todo with JWT
+            refreshToken: '...', // todo with JWT
+        };
     }
 }
