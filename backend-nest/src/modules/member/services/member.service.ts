@@ -3,7 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { Member } from '@member/entities/member.entity';
-import { EmailAlreadyExistException } from '@core/config/exceptions/member.exceptions';
+import { 
+    EmailAlreadyExistException,
+    NicknameAlreadyExistException
+} from '@core/config/exceptions/member.exceptions';
 import { MemberRole } from '@member/enums';
 
 @Injectable()
@@ -23,13 +26,14 @@ export class MemberService {
     async create(email: string, nickname: string): Promise<Member> {
         const normalizedEmail = email.toLowerCase();
 
-        // Check if the memeber exists
-        const existing = await this.memberRepository.findOne({
-            where: { email: normalizedEmail },
-        });
-
-        if (existing) {
+        // Check if member's email exists
+        if (await this.memberRepository.findOne({ where: { email: normalizedEmail } })) {
             throw new EmailAlreadyExistException();
+        }
+
+        // Check if nickname's member exists
+        if (await this.memberRepository.findOne({ where: { nickname } })) {
+            throw new NicknameAlreadyExistException();
         }
 
         const member = this.memberRepository.create({
