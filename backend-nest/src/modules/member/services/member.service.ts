@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 
 import { Member } from '@member/entities/member.entity';
 import { EmailAlreadyExistException } from '@core/config/exceptions/member.exceptions';
+import { MemberRole } from '@member/enums';
 
 @Injectable()
 export class MemberService {
@@ -34,6 +35,7 @@ export class MemberService {
         const member = this.memberRepository.create({
             email: normalizedEmail,
             nickname,
+            role: MemberRole.USER // default value
         });
 
         // Save the new user to the database
