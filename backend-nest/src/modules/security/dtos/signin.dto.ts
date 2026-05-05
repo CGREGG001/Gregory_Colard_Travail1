@@ -1,22 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
 
-export class SignupDto {
-    @ApiProperty({
-        example: 'Doe',
-        description: 'Unique public nickname',
-        minLength: 2,
-        maxLength: 50,
-    })
-    @MinLength(2)
-    @MaxLength(50)
-    readonly nickname!: string;
-
+/*
+ * Note: The "!" definite assignment assertions are required because TypeORM
+ * initializes entity properties at runtime without using the constructor.
+ * This bypasses strictPropertyInitialization while remaining aligned with
+ * TypeORM best practices.
+ */
+export class SigninDto {
     @ApiProperty({
         example: 'john.doe@example.com',
         description: 'Member email address (stored in lowercase)',
     })
     @IsEmail()
+    @MaxLength(255)
     email!: string;
 
     @ApiProperty({
