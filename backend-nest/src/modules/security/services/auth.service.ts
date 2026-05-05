@@ -7,6 +7,7 @@ import { MemberService } from '@member/services';
 import { CredentialService } from '@security/services';
 import { SignupDto } from '@security/dtos/signup.dto';
 import { SigninDto } from '@security/dtos/signin.dto';
+import { ApiCodeResponse } from '@core/api';
 
 const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
 
@@ -55,20 +56,20 @@ export class AuthService {
     async signin(dto: SigninDto): Promise<Member> {
         const member = await this.memberService.findByEmail(dto.email);
         if (!member) {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException(ApiCodeResponse.INVALID_CREDENTIALS);
         }
 
         const credential = await this.credentialService.findByMember(member);
 
         // Security check before calling bcrypt
         if (!credential || !credential.password) {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException(ApiCodeResponse.INVALID_CREDENTIALS);
         }
 
         // bcrypt.compare(plaintext_password, hashed_password)
-        const isValid = credential && await bcrypt.compare(dto.password, credential.password);
+        const isValid = await bcrypt.compare(dto.password, credential.password);
         if (!isValid) {
-            throw new UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException(ApiCodeResponse.INVALID_CREDENTIALS);
         }
 
         // Token will come later

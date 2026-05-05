@@ -11,5 +11,8 @@ export enum ApiCodeResponse {
     TOKEN_EXPIRED = 'api.error.token_expired',
     NO_TOKEN_FOUNDED = 'api.error.no_token_founded',
     SIGNUP_ERROR = 'api.error.signup_error',
-    TOKEN_GEN_ERROR = 'api.error.token_gen_error'
+    TOKEN_GEN_ERROR = 'api.error.token_gen_error',
+    INVALID_CREDENTIALS = 'api.error.invalid_credentials',
+    EMAIL_ALREADY_EXISTS = 'api.error.email_already_exists',
+    NICKNAME_ALREADY_EXISTS = 'api.error.nickname_already_exists',
 }
