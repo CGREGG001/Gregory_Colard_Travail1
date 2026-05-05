@@ -44,7 +44,7 @@ export class Member {
 
     @Column()
     @Index('uq_member_nickName', { unique: true }) // Explicit constraint name for AuthService
-    nickName!: string;
+    nickname!: string;
 
     // Role of the member for managing permissions.
     @Column({ name: 'member_role', type: 'enum', enum: MemberRole, nullable: false })
