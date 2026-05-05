@@ -1,10 +1,12 @@
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Transactional } from 'typeorm-transactional';
+import * as bcrypt from 'bcrypt';
+
 import { Member } from '@member/entities';
 import { MemberService } from '@member/services';
-import { SignupDto } from '@security/dtos';
-import { Injectable } from '@nestjs/common';
-import { Transactional } from 'typeorm-transactional';
 import { CredentialService } from '@security/services';
-import * as bcrypt from 'bcrypt';
+import { SignupDto } from '@security/dtos/signup.dto';
+import { SigninDto } from '@security/dtos/signin.dto';
 
 const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
 
@@ -22,10 +24,10 @@ export class AuthService {
     ) {}
 
     /**
-     * Signs up a new user by creating a user entity and their associated credentials.
-     * Delegates validation to UserService and coordinates the transaction.
-     * @param signupDto - The signup data transfer object containing the email and username of the new user.
-     * @returns A promise that resolves to the newly created User entity.
+     * Signs up a new member by creating a member entity and their associated credentials.
+     * Delegates validation to memberService and coordinates the transaction.
+     * @param signupDto - The signup data transfer object containing the email and nickname of the new member.
+     * @returns A promise that resolves to the newly created member entity.
      */
     @Transactional()
     async signup(signupDto: SignupDto): Promise<Member> {
@@ -44,5 +46,25 @@ export class AuthService {
 
         return member;
     }
+
+    /**
+     * Authenticates a member by validating their credentials.
+     * @param dto - The signin data transfer object containing email and password.
+     * @returns The authenticated Member entity.
+     */
+    async signin(dto: SigninDto): Promise<Member> {
+        const member = await this.memberService.findByEmail(dto.email);
+        if (!member) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
+        const credential = await this.credentialService.findByMember(member);
+        const isValid = credential && await bcrypt.compare(dto.password, credential.password);
+        if (!isValid) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
+        // Token will come later
+        return member;
+    }
 }
-    
