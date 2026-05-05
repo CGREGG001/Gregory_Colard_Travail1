@@ -59,6 +59,13 @@ export class AuthService {
         }
 
         const credential = await this.credentialService.findByMember(member);
+
+        // Security check before calling bcrypt
+        if (!credential || !credential.password) {
+            throw new UnauthorizedException('Invalid credentials');
+        }
+
+        // bcrypt.compare(plaintext_password, hashed_password)
         const isValid = credential && await bcrypt.compare(dto.password, credential.password);
         if (!isValid) {
             throw new UnauthorizedException('Invalid credentials');

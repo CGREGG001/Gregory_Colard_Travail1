@@ -32,7 +32,8 @@ export class CredentialService {
    */
   async findByMember(member: Member): Promise<Credential | null> {
     return this.credentialRepository.findOne({
-      where: { member: { id: member.id } }
+      where: { member: { id: member.id } },
+      select: ['id', 'password'] // <-- Force password selection beacause it is set to 'select: false'
     });
   }
 }
