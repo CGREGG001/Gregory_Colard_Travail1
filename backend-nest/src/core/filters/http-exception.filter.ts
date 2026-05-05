@@ -13,8 +13,25 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
 
-        response
-        .status(exception.getStatus())
-        .json(exception.getResponse());
+        const status = exception.getStatus();
+        const exceptionResponse =  exception.getResponse();
+
+        let payload: unknown; // unknown any becaouse cleaner
+
+        // Payload already structured (ValidationException, ApiException, etc)
+        if (typeof exceptionResponse === 'object') {
+            payload = exceptionResponse;
+        }
+
+        // payload string (e.g. throw new BadRequestException("Oups"))
+        else {
+            payload = {
+                statusCode: status,
+                message: exceptionResponse,
+                errorCode: 'UNHANDLED_ERROR',
+            };
+        }
+
+        response.status(status).json(payload);
     }
 }
