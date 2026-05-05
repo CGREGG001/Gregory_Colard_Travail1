@@ -17,10 +17,11 @@ export class AuthController {
     @Post('signup')
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Register a new member' })
-    @ApiResponse({ status: 201, description: 'Member successfully created', type: Member })
+    @ApiResponse({ status: 201, description: 'Member successfully created', type: MemberDto })
     @ApiBody({ type: SignupDto })
-    async signup(@Body() SignupDto: SignupDto): Promise<Member> {
-        return this.authService.signup(SignupDto);
+    async signup(@Body() signupDto: SignupDto): Promise<MemberDto> {
+        const member = await this.authService.signup(signupDto);
+        return new MemberDto(member);
     }
 
     /**
