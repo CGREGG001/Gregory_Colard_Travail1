@@ -1,5 +1,5 @@
 import { Controller, Delete, Get } from '@nestjs/common';
-import { AccountService } from './account.service';
+import { AccountService } from '@account/services/account.service';
 
 @Controller('account')
 export class AccountController {
