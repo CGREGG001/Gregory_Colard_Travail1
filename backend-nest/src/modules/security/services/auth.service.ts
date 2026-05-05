@@ -5,8 +5,8 @@ import * as bcrypt from 'bcrypt';
 import { Member } from '@member/entities';
 import { MemberService } from '@member/services';
 import { CredentialService } from '@security/services';
-import { SignupDto } from '@security/dtos/signup.dto';
-import { SigninDto } from '@security/dtos/signin.dto';
+import { SignupDto } from '@security/dtos/requests/signup.dto';
+import { SigninDto } from '@security/dtos/requests/signin.dto';
 import { ApiCodeResponse } from '@core/api';
 
 const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
