@@ -4,6 +4,13 @@ import { Credential } from "@security/entities"
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 
+/**
+ * Service responsible for managing user credentials.
+ *
+ * - Stores hashed passwords.
+ * - Retrieves credentials linked to a Member.
+ * - Ensures password fields are explicitly selected when needed.
+ */
 @Injectable()
 export class CredentialService { 
   constructor( @InjectRepository(Credential) private readonly credentialRepository: Repository<Credential>) {}
@@ -27,7 +34,11 @@ export class CredentialService {
   /**
    * Retrieves the credentials associated with a specific member.
    * 
-   * @param member - The member entity whose credentials are being searched.
+   * Note:
+   * - Password is normally excluded by default (select: false).
+   * - This method explicitly selects the password field.
+   * 
+   * @param member - The member entity whose credentials are being retrieved.
    * @returns A Promise that resolves to the Credential entity if found, or null otherwise.
    */
   async findByMember(member: Member): Promise<Credential | null> {

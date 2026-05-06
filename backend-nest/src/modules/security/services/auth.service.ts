@@ -14,6 +14,12 @@ import { JWTDuration } from '@security/types';
 
 const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
 
+/**
+ * Service handling authentication logic:
+ * - Signup: creates a Member and its associated Credential.
+ * - Signin: validates credentials, generates JWT tokens, and persists refresh tokens.
+ * - Uses bcrypt for password hashing and JWT for token issuance.
+ */
 @Injectable()
 export class AuthService {
     /**
@@ -33,7 +39,7 @@ export class AuthService {
     /**
      * Signs up a new member by creating a member entity and their associated credentials.
      * Delegates validation to memberService and coordinates the transaction.
-     * @param signupDto - The signup data transfer object containing the email and nickname of the new member.
+     * @param signupDto - The signup dto containing the email, nickname and hashed password of the new member.
      * @returns A promise that resolves to the newly created member entity.
      */
     @Transactional()
@@ -56,8 +62,10 @@ export class AuthService {
 
     /**
      * Authenticates a member by validating their credentials.
-     * @param dto - The signin data transfer object containing email and password.
+     * @param dto - The signin dto containing email and password.
      * @returns The authenticated Member entity.
+     * @throws UnauthorizedException
+     * Thrown when credentials are invalid or missing.
      */
     async signin(dto: SigninDto): Promise<{ 
         member: Member;
