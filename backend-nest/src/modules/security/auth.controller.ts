@@ -56,7 +56,7 @@ export class AuthController {
      * @param req - The request object containing the user payload from the RefreshTokenGuard.
      * @returns A new pair of Access and Refresh tokens.
      */
-    @ApiBearerAuth('access-token')
+    @ApiBearerAuth('refresh-token')
     @ApiOperation({ summary: 'Refresh session tokens', description: 'Rotates the current refresh token to provide a new set of credentials.' })
     @UseGuards(RefreshTokenGuard)
     @Post('refresh')
