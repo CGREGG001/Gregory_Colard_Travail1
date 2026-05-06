@@ -8,7 +8,7 @@ export class AccountController {
 
     constructor(private readonly accountService: AccountService) {}
     
-    @ApiBearerAuth()
+    @ApiBearerAuth('access-token')
     @UseGuards(JwtAuthGuard)
     @Get('status')
     getStatus(): string {
