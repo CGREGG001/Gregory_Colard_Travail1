@@ -10,6 +10,7 @@ import { CredentialService } from '@security/services/credential.service';
 import { Credential } from '@security/entities/credential.entity';
 import { Token } from '@security/entities/token.entity';
 import { JwtStrategy } from '@security/strategies';
+import { TokenService } from './services';
 
 @Module({
     imports: [
@@ -34,8 +35,9 @@ import { JwtStrategy } from '@security/strategies';
     providers: [
         AuthService,
         CredentialService,
-        JwtStrategy
+        JwtStrategy,
+        TokenService
     ],
-    exports: [AuthService],
+    exports: [AuthService, TokenService],
 })
 export class SecurityModule {}
