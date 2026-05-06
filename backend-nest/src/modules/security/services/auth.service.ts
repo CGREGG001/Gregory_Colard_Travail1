@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Transactional } from 'typeorm-transactional';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 
 import { Member } from '@member/entities';
@@ -9,6 +10,7 @@ import { CredentialService } from '@security/services';
 import { SignupDto } from '@security/dtos/requests/signup.dto';
 import { SigninDto } from '@security/dtos/requests/signin.dto';
 import { ApiCodeResponse } from '@core/api';
+import { JWTDuration } from '@security/types';
 
 const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
 
@@ -23,7 +25,8 @@ export class AuthService {
     constructor(
         private readonly memberService: MemberService,
         private readonly credentialService: CredentialService,
-        private readonly jwtService: JwtService
+        private readonly jwtService: JwtService,
+        private readonly configService: ConfigService
     ) {}
 
     /**
@@ -55,15 +58,18 @@ export class AuthService {
      * @param dto - The signin data transfer object containing email and password.
      * @returns The authenticated Member entity.
      */
-    async signin(dto: SigninDto): Promise<{ member: Member; accessToken: string }> {
+    async signin(dto: SigninDto): Promise<{ 
+        member: Member;
+        accessToken: string;
+        refreshToken: string }> {
+        
         const member = await this.memberService.findByEmail(dto.email);
         if (!member) {
             throw new UnauthorizedException(ApiCodeResponse.INVALID_CREDENTIALS);
         }
 
-        const credential = await this.credentialService.findByMember(member);
-
         // Security check before calling bcrypt
+        const credential = await this.credentialService.findByMember(member);
         if (!credential || !credential.password) {
             throw new UnauthorizedException(ApiCodeResponse.INVALID_CREDENTIALS);
         }
@@ -76,9 +82,20 @@ export class AuthService {
 
         const payload = { sub: member.id, email: member.email };
 
+        const accessExp = this.configService.getOrThrow<JWTDuration>('JWT_ACCESS_TOKEN_EXPIRATION');
+        const accessToken = await this.jwtService.signAsync(payload, {
+            expiresIn: accessExp,
+        });
+
+        const refreshExp = this.configService.getOrThrow<JWTDuration>('JWT_REFRESH_TOKEN_EXPIRATION');
+        const refreshToken = await this.jwtService.signAsync(payload, {
+            expiresIn: refreshExp,
+        });
+
         return {
             member,
-            accessToken: await this.jwtService.signAsync(payload),
+            accessToken,
+            refreshToken,
         };
     }
 }
