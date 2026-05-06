@@ -19,7 +19,7 @@ export class TokenService {
     private readonly tokenRepository: Repository<Token>
   ) {}
 
-    /**
+  /**
    * Creates or updates the refresh token linked to a given credential.
    *
    * Workflow:
@@ -50,5 +50,17 @@ export class TokenService {
 
     token.hashedRefreshToken = hashedRefreshToken;
     await this.tokenRepository.save(token);
+  }
+
+  /**
+   * Retrieves the token session record associated with a specific credential.
+   * 
+   * @param credential - The credential entity used to identify the session.
+   * @returns A promise that resolves to the Token entity if found, or null otherwise.
+   */
+  async findByCredential(credential: Credential): Promise<Token | null> {
+      return this.tokenRepository.findOne({
+          where: { credential: { id: credential.id } },
+      });
   }
 }
