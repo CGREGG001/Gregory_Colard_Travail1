@@ -6,7 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 import { Member } from '@member/entities';
 import { MemberService } from '@member/services';
-import { CredentialService } from '@security/services';
+import { CredentialService, TokenService } from '@security/services';
 import { SignupDto } from '@security/dtos/requests/signup.dto';
 import { SigninDto } from '@security/dtos/requests/signin.dto';
 import { ApiCodeResponse } from '@core/api';
@@ -26,7 +26,8 @@ export class AuthService {
         private readonly memberService: MemberService,
         private readonly credentialService: CredentialService,
         private readonly jwtService: JwtService,
-        private readonly configService: ConfigService
+        private readonly configService: ConfigService,
+        private readonly tokenService: TokenService
     ) {}
 
     /**
@@ -91,6 +92,13 @@ export class AuthService {
         const refreshToken = await this.jwtService.signAsync(payload, {
             expiresIn: refreshExp,
         });
+
+        // Hash refresh token
+        const salt = await bcrypt.genSalt(saltRounds);
+        const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
+
+        // Store refresh token
+        await this.tokenService.updateOrCreate(member, hashedRefreshToken);
 
         return {
             member,
