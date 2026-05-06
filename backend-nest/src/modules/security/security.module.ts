@@ -6,6 +6,7 @@ import { AuthService } from '@security/services/auth.service';
 import { CredentialService } from '@security/services/credential.service';
 import { MemberModule } from '@member/member.module';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './strategies';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
 
@@ -28,6 +29,7 @@ import { AuthController } from './auth.controller';
     providers: [
         AuthService,
         CredentialService,
+        JwtStrategy
     ],
     exports: [AuthService],
 })
