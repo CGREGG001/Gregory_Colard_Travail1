@@ -9,7 +9,7 @@ import { MemberService } from '@member/services';
 import { CredentialService, TokenService } from '@security/services';
 import { SignupDto } from '@security/dtos/requests/signup.dto';
 import { SigninDto } from '@security/dtos/requests/signin.dto';
-import { ApiCodeResponse } from '@core/api';
+import { ApiCodeResponse, ApiException } from '@core/api';
 import { JWTDuration } from '@security/types';
 
 const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS);
@@ -89,29 +89,52 @@ export class AuthService {
             throw new UnauthorizedException(ApiCodeResponse.INVALID_CREDENTIALS);
         }
 
-        const payload = { sub: member.id, email: member.email };
-
-        const accessExp = this.configService.getOrThrow<JWTDuration>('JWT_ACCESS_TOKEN_EXPIRATION');
-        const accessToken = await this.jwtService.signAsync(payload, {
-            expiresIn: accessExp,
-        });
-
-        const refreshExp = this.configService.getOrThrow<JWTDuration>('JWT_REFRESH_TOKEN_EXPIRATION');
-        const refreshToken = await this.jwtService.signAsync(payload, {
-            expiresIn: refreshExp,
-        });
-
-        // Hash refresh token
-        const salt = await bcrypt.genSalt(saltRounds);
-        const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
-
-        // Store refresh token
-        await this.tokenService.updateOrCreate(credential, hashedRefreshToken);
+        const { accessToken, refreshToken } = await this.generateTokens(member);
 
         return {
             member,
             accessToken,
-            refreshToken,
+            refreshToken
         };
     }
+
+    /**
+     * Generates a new pair of Access and Refresh JWT tokens for a given member.
+     * The refresh token is hashed and persisted in the database for future validation (Rotation).
+     * 
+     * @param member - The member entity for whom tokens are generated.
+     * @returns A promise that resolves to an object containing the accessToken and refreshToken strings.
+     * @throws {ApiException} If the associated credentials cannot be found (404).
+     */
+    private async generateTokens(member: Member): Promise<{ accessToken: string; refreshToken: string }> {
+        const payload = { sub: member.id, email: member.email };
+        
+        // Get durations from config service
+        const accessExp = this.configService.getOrThrow<JWTDuration>('JWT_ACCESS_TOKEN_EXPIRATION');
+        const refreshExp = this.configService.getOrThrow<JWTDuration>('JWT_REFRESH_TOKEN_EXPIRATION');
+
+        // Parallel generation for better performance
+        const [accessToken, refreshToken] = await Promise.all([
+            this.jwtService.signAsync(payload, {
+                expiresIn: accessExp,
+            }),
+            this.jwtService.signAsync(payload, {
+                expiresIn: refreshExp,
+            }),
+        ]);
+
+        // Hash refresh token for DB storage
+        const salt = await bcrypt.genSalt(saltRounds);
+        const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
+
+        // Retrieve associated credentials
+        const credential = await this.credentialService.findByMember(member);
+        if (!credential) throw new ApiException(ApiCodeResponse.USER_NOT_FOUND, 404);
+        
+        // Persist or update the refresh token hash
+        await this.tokenService.updateOrCreate(credential, hashedRefreshToken);
+
+        return { accessToken, refreshToken };
+    }
+
 }
