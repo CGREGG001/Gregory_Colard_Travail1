@@ -67,10 +67,7 @@ export class AuthService {
      * @throws UnauthorizedException
      * Thrown when credentials are invalid or missing.
      */
-    async signin(dto: SigninDto): Promise<{ 
-        member: Member;
-        accessToken: string;
-        refreshToken: string }> {
+    async signin(dto: SigninDto): Promise<{ member: Member; accessToken: string; refreshToken: string }> {
         
         const member = await this.memberService.findByEmail(dto.email);
         if (!member) {
@@ -96,6 +93,43 @@ export class AuthService {
             accessToken,
             refreshToken
         };
+    }
+
+    /**
+     * Refreshes the authentication tokens by validating the current refresh token against the stored hash.
+     * Implements "Refresh Token Rotation" for enhanced security.
+     * 
+     * @param memberId - The unique identifier of the member (extracted from JWT sub).
+     * @param refreshToken - The plaintext refresh token provided by the client.
+     * @returns A promise that resolves to a new pair of Access and Refresh tokens.
+     * @throws {UnauthorizedException} If any step of the validation fails.
+     */
+    @Transactional()
+    async refreshTokens(memberId: string, refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
+        // 1. Retrieve the member or fail
+        const member = await this.memberService.findByIdOrFail(memberId);
+
+        // 2. Retrieve credentials
+        const credential = await this.credentialService.findByMember(member);
+        if (!credential) {
+            throw new UnauthorizedException(ApiCodeResponse.USER_NOT_FOUND);
+        }
+
+        // 3. Retrieve the persisted token record
+        const tokenRecord = await this.tokenService.findByCredential(credential);
+        if (!tokenRecord || !tokenRecord.hashedRefreshToken) {
+            throw new UnauthorizedException(ApiCodeResponse.TOKEN_EXPIRED);
+        }
+
+        // 4. Security check: Compare the provided token with the hashed version in DB
+        const isMatch = await bcrypt.compare(refreshToken, tokenRecord.hashedRefreshToken);
+        if (!isMatch) {
+            // Potential reuse attack or invalid token
+            throw new UnauthorizedException(ApiCodeResponse.INVALID_CREDENTIALS);
+        }
+
+        // 5. Success: Generate a new pair and update the DB (Rotation)
+        return this.generateTokens(member);
     }
 
     /**
@@ -136,5 +170,4 @@ export class AuthService {
 
         return { accessToken, refreshToken };
     }
-
 }
