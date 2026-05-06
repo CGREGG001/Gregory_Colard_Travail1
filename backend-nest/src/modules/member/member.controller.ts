@@ -1,12 +1,12 @@
 import { Controller, Delete, Get, Put } from '@nestjs/common';
-import { MemberService } from 'modules/member/services';
+import { MemberService } from '@member/services';
 import { ApiOperation } from '@nestjs/swagger';
 import { 
     MemberControllerDeleteDocumentation,
     MemberControllerDetailsDocumentation,
     MemberControllerListDocumentation,
     MemberControllerUpdateDocumentation 
-} from 'modules/member/member.swagger';
+} from '@member/member.swagger';
 
 @Controller('member')
 export class MemberController {

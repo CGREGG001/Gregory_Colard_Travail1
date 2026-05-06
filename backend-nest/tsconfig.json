@@ -13,12 +13,11 @@
     "target": "ES2023",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src",
     "paths": {
-      "@core/*": ["./core/*"],
-      "@security/*": ["./modules/security/*"],
-      "@member/*": ["./modules/member/*"],
-      "@account/*": ["./modules/account/*"]
+      "@core/*": ["./src/core/*"],
+      "@security/*": ["./src/modules/security/*"],
+      "@member/*": ["./src/modules/member/*"],
+      "@account/*": ["./src/modules/account/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
