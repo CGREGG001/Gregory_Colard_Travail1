@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -8,6 +8,7 @@ import {
     NicknameAlreadyExistException
 } from '@member/exceptions/member.exceptions';
 import { MemberRole } from '@member/enums';
+import { ApiCodeResponse } from '@core/api';
 
 @Injectable()
 export class MemberService {
@@ -56,6 +57,17 @@ export class MemberService {
         return this.memberRepository.findOne({
             where: { email: email.toLowerCase() }
         });
+    }
+
+    async findByIdOrFail(id: string): Promise<Member> {
+        const member = await this.memberRepository.findOne({ where: { id } });
+        
+        if (!member) {
+            // Utilise ton énumération de codes d'erreur pour rester cohérent
+            throw new NotFoundException(ApiCodeResponse.MEMBER_NOT_FOUND); 
+        }
+        
+        return member;
     }
 
     private members: string[] = [
