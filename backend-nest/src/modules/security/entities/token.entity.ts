@@ -29,11 +29,13 @@ export class Token {
         }
     }
 
-    @Column({ nullable: false })
-    token!: string;
-
-    @Column({ name: 'refresh_token', nullable: false })
-    refreshToken!: string;
+    @Column({ 
+        name: 'hashed_refresh_token',
+        type: 'varchar',
+        length: 255,
+        nullable: true 
+    })
+    hashedRefreshToken!: string | null;
 
     @OneToOne(() => Credential,{ eager: true, onDelete: 'CASCADE' })
     @JoinColumn({
