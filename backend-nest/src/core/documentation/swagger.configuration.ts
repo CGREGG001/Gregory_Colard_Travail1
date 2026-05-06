@@ -14,6 +14,7 @@ class SwaggerConfiguration {
                 in: 'Header',
                 scheme: 'Bearer',
             })
+            .addBearerAuth()
             .build();
         const document = SwaggerModule.createDocument(app, config);
         SwaggerModule.setup('docs', app, document);
