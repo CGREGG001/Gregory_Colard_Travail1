@@ -15,4 +15,5 @@ export enum ApiCodeResponse {
     INVALID_CREDENTIALS = 'api.error.invalid_credentials',
     EMAIL_ALREADY_EXISTS = 'api.error.email_already_exists',
     NICKNAME_ALREADY_EXISTS = 'api.error.nickname_already_exists',
+    TOKEN_CREDENTIAL_MISSING = 'api.error.token_credential_missing',
 }
