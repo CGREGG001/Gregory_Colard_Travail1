@@ -98,7 +98,7 @@ export class AuthService {
         const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
 
         // Store refresh token
-        await this.tokenService.updateOrCreate(member, hashedRefreshToken);
+        await this.tokenService.updateOrCreate(credential, hashedRefreshToken);
 
         return {
             member,
