@@ -6,7 +6,7 @@ import { Member } from '@member/entities/member.entity';
 import { 
     EmailAlreadyExistException,
     NicknameAlreadyExistException
-} from '@core/config/exceptions/member.exceptions';
+} from '@member/exceptions/member.exceptions';
 import { MemberRole } from '@member/enums';
 
 @Injectable()
