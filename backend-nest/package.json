@@ -18,13 +18,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    
     "prepare": "husky",
-
-    "migration:generate": "typeorm-ts-node-commonjs migration:generate src/migrations -d src/data-source.ts",
-    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/data-source.ts",
-    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/data-source.ts",
-
+    "migration:generate": "cross-env NODE_ENV=dev node -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:generate -d src/core/config/data-source.ts",
+    "migration:run": "cross-env NODE_ENV=dev node -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:run -d src/core/config/data-source.ts",
+    "migration:revert": "cross-env NODE_ENV=dev node -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:revert -d src/core/config/data-source.ts",
     "docker:dev": "docker compose -f docker/docker-compose.dev.yml --env-file .env.dev up",
     "docker:stop": "docker compose -f docker/docker-compose.dev.yml --env-file .env.dev down"
   },
@@ -36,8 +33,10 @@
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.2",
+    "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/swagger": "^11.2.6",
     "@nestjs/typeorm": "^11.0.0",
@@ -48,11 +47,14 @@
     "date-fns": "^4.1.0",
     "dotenv": "^17.3.1",
     "lodash": "^4.17.23",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
     "pg": "^8.20.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.28",
+    "typeorm-transactional": "^0.5.0",
     "ulid": "^3.0.2"
   },
   "devDependencies": {
@@ -69,9 +71,11 @@
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.24",
     "@types/node": "^22.10.7",
+    "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^6.0.2",
     "@typescript-eslint/eslint-plugin": "^8.57.2",
     "@typescript-eslint/parser": "^8.57.2",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",

@@ -1,3 +1,3 @@
-export * from './enums/api-code.response.enum';
+export * from './enums';
 export * from './api.exception';
 export * from './api.response';

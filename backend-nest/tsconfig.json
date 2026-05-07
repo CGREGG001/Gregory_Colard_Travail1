@@ -13,10 +13,11 @@
     "target": "ES2023",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./src",
     "paths": {
-      "@core/*": ["./core/*"],
-      "@member/*": ["./features/member/*"],
+      "@core/*": ["./src/core/*"],
+      "@security/*": ["./src/modules/security/*"],
+      "@member/*": ["./src/modules/member/*"],
+      "@account/*": ["./src/modules/account/*"]
     },
     "incremental": true,
     "skipLibCheck": true,
@@ -24,6 +25,7 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "lib": ["es2023"]
   }
 }
