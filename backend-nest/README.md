@@ -1,98 +1,235 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="http://nestjs.com/" target="blank">
+    <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
+  </a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  <img src="https://img.shields.io/badge/NestJS-v10-red" />
+  <img src="https://img.shields.io/badge/TypeScript-5.x-blue" />
+  <img src="https://img.shields.io/badge/Docker-ready-2496ED" />
+  <img src="https://img.shields.io/badge/License-MIT-green" />
+  <img src="https://img.shields.io/badge/Status-Active-success" />
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# **NestJS API (Security, Auth, Docker, Migrations)**
+*Dans le cadre du cours de web | Bachelier Informatique en Developpemnt d'Application | IPEFA Sup Seraing 2025/2026*
 
-## Project setup
+## **Présentation générale**
 
-```bash
-$ npm install
+Ce projet est une API NestJS modulaire, utilisant :
+
+- TypeORM + PostgreSQL  
+- JWT Access & Refresh Tokens  
+- Refresh Token Rotation  
+- Swagger pour la documentation  
+- Docker pour l’environnement de développement  
+- Scripts de migration TypeORM
+
+L’objectif est de fournir une base solide, extensible, sécurisée et documentée pour construire une application backend moderne.
+
+---
+
+## **Sécurité & Authentification**
+
+Le module Security implémente :
+
+- **JWT Access Token** (15 minutes)
+- **JWT Refresh Token** (7 jours)
+- **Refresh Token Rotation**  
+- Stratégies Passport dédiées :
+  - **JwtStrategy** (access)
+  - **JwtRefreshStrategy** (refresh)
+- Guards :
+  - **JwtAuthGuard**
+  - **RefreshTokenGuard**
+
+Swagger expose deux schémas Bearer distincts :
+
+- `access-token`  
+- `refresh-token`
+
+---
+
+## **Installation**
+
+### 1. Cloner le projet
+
+```
+git clone <repo>
+cd <repo>
 ```
 
-## Compile and run the project
+### 2. Installer les dépendances
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+npm install
 ```
 
-## Run tests
+### 3. Configurer l’environnement
 
-```bash
-# unit tests
-$ npm run test
+**Copier les fichiers d’exemple :**
 
-# e2e tests
-$ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+```
+cp .env.dev.example .env.dev
 ```
 
-## Deployment
+Puis remplir les valeurs :
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+```
+# Variables for docker
+# DATABASE
+DB_TYPE=postgres
+DB_HOST=db
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=BidaNest
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+# API
+API_PORT=3002
+```
+---
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```
+cp .env.example .env
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+Puis remplir les valeurs :
 
-## Resources
+```
+# API
+API_PORT=3002
 
-Check out a few resources that may come in handy when working with NestJS:
+# DATABASE
+DB_TYPE=postgres
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=BidaNest
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+# BCRYPT SALT
+BCRYPT_SALT_ROUNDS=12
 
-## Support
+# JWT SECRET
+JWT_SECRET=supersecretdelamortquitue
+JWT_ACCESS_TOKEN_SECRET=supersecretaccess
+JWT_REFRESH_TOKEN_SECRET=supersecretrefresh
+JWT_ACCESS_TOKEN_EXPIRATION=15m
+JWT_REFRESH_TOKEN_EXPIRATION=7d
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## **Lancement avec Docker**
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Le projet inclut un script :
 
-## License
+```
+npm run docker:dev
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Ce script :
+
+- lance PostgreSQL
+- lance l’API NestJS en mode watch
+- expose Swagger sur `http://localhost:3002/docs`
+
+⚠️ **Les migrations ne sont pas exécutées automatiquement.**
+
+---
+
+## **Migrations TypeORM**
+
+### Générer une migration
+
+```
+npm run migration:generate -- src/migrations/<nom>
+```
+
+### Exécuter les migrations
+
+```
+npm run migration:run
+```
+
+⚠️ À faire **après** le lancement Docker, car la DB doit être accessible.
+
+---
+
+Swagger :
+
+```
+http://localhost:3002/docs
+```
+
+---
+
+## **Endpoints principaux**
+
+| Méthode | Endpoint | Description | Auth |
+|---------|----------|-------------|------|
+|POST|/auth/signup | Inscription d'un membre | Public |
+|POST|/auth/signin | Connexion (retourne 2 tokens) | Public |
+|POST|/auth/refresh | Rotation des tokens | Refresh Token |
+|GET|/account/status | Vérifie la session actuelle | Access Token |
+
+---
+
+## **Tester l’authentification dans Swagger**
+
+1. Appeler `/auth/signin`  
+2. Copier `accessToken` et `refreshToken`  
+3. Cliquer sur **Authorize**  
+   - `access-token` → access token  
+   - `refresh-token` → refresh token  
+4. Tester `/account/status`  
+5. Tester `/auth/refresh`
+
+---
+
+## **Structure du projet**
+
+```
+src/
+│
+├── modules/
+│   ├── security/
+│   │   ├── controllers/
+│   │   ├── strategies/
+│   │   ├── guards/
+│   │   ├── services/
+│   │   └── security.module.ts
+│   ├── member/
+│   └── ...
+│
+├── core/
+│   ├── config/
+│   └── ...
+├── main.ts
+└── app.module.ts
+```
+
+---
+
+## Scripts utiles
+
+| Script | Description |
+|--------|-------------|
+| `docker:dev` | Lance l’API en mode watch + PostgreSQL |
+| `migration:generate` | Génère une migration |
+| `migration:run` | Exécute les migrations |
+
+---
+## Restons en contact
+
+- Auteur - [Gregory Colard](https://github.com/CGREGG001)
+
+---
+
+## Licence
+
+Ce projet est distribué sous [licence MIT](./LICENSE).
