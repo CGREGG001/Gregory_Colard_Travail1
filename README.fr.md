@@ -1,4 +1,9 @@
+<br>
+
 # **Projet Web (IPEFA Sup Seraing 2025/2026)**
+
+<br>
+<br>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Project-NestJS%20API-blue" alt="Project NestJS API" />
@@ -11,7 +16,6 @@
   <b>🇫🇷 Français</b> | <a href="README.md">🇬🇧 English</a>
 </p>
 
-<br/>
 
 ## **Présentation**
 
@@ -93,9 +97,9 @@ Le backend implémente un flux de sécurité robuste et moderne :
 
 Toute la documentation approfondie se trouve dans le dossier [`docs/`](./docs) :
 
-- [`docs/setup.md`](./docs/setup.md) : Variables d’environnement et guide d'installation.
-- [`docs/architecture.md`](./docs/architecture.md) : Choix architecturaux, Design Patterns, Intercepteurs.
-- [`docs/auth.md`](./docs/auth.md) : Mécanisme détaillé du JWT, Rotation, Stratégies et Guards.
+- [`docs/setup.md`](./docs/setup.fr.md) : Variables d’environnement et guide d'installation.
+- [`docs/architecture.md`](./docs/architecture.fr.md) : Choix architecturaux, Design Patterns, Intercepteurs.
+- [`docs/auth.md`](./docs/auth.fr.md) : Mécanisme détaillé du JWT, Rotation, Stratégies et Guards.
 
 <br/>
 

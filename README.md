@@ -1,4 +1,9 @@
+<br>
+
 # **Web Project (IPEFA Sup Seraing 2025/2026)**
+
+<br>
+<br>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Project-NestJS%20API-blue" alt="Project NestJS API" />
@@ -11,7 +16,7 @@
   <b>🇬🇧 English</b> | <a href="README.fr.md">🇫🇷 Français</a>
 </p>
 
-<br/>
+
 
 ## **Overview**
 
