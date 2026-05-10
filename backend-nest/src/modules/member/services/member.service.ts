@@ -100,39 +100,31 @@ export class MemberService {
         return member;
     }
 
-    private members: string[] = [
-        'Jean Dupont',
-        'Marie Martin',
-        'Lucas Bernard',
-        'Sophie Petit',
-        'Thomas Durand'
-    ]
-
     /**
      * getMember
      */
-    public getMemberInfo(): string {
-        return 'Member: Jean Dupont';
+    public getMemberInfo(): void {
+        // TODO
     }
 
     /**
      * getMembers
      */
-    public getMemberList(): string[] {
-        return this.members;
+    public getMemberList(): void {
+        // TODO
     }
 
     /**
      * updateMember
      */
-    public updateMember(): string {
-        return '';
+    public updateMember(): void {
+        // TODO '';
     }
 
     /**
      * deleteMember
      */
-    public removeMember(): boolean {
-        return true;
+    public removeMember(): void {
+        // TODO
     }
 }

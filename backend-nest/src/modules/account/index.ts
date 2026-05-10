@@ -1,1 +1,1 @@
-export * from './services';
+export * from './account.controller';
