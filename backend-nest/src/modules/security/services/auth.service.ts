@@ -138,11 +138,14 @@ export class AuthService {
      * @param memberId - The ID of the member to log out.
      */
     @Transactional()
-    async logout(memeberId: string): Promise<void> {
-        const member = await this.memberService.findByIdOrFail(memeberId);
-        const credential = await this.credentialService.findByMember(member);
+    async logout(memberID: string): Promise<void> {
+        const member = await this.memberService.findById(memberID);
+        if(!member) {
+            return; // logout must be quiet (REST standard)      
+        }
 
-        if(credential) {
+        const credential = await this.credentialService.findByMember(member);
+        if (credential) {
             await this.tokenService.removeByCredential(credential.id);
         }
     }
