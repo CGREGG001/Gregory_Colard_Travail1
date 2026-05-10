@@ -1,102 +1,117 @@
-# **Projet Web (IPEFA Sup Seraing 2025/2026)**
+<br>
+
+# **Web Project (IPEFA Sup Seraing 2025/2026)**
+
+<br>
+<br>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Project-NestJS%20API-blue" />
-  <img src="https://img.shields.io/badge/Frontend-Pending-lightgrey" />
-  <img src="https://img.shields.io/badge/License-MIT-green" />
-  <img src="https://img.shields.io/badge/Status-In%20Development-yellow" />
+  <img src="https://img.shields.io/badge/Project-NestJS%20API-blue" alt="Project NestJS API" />
+  <img src="https://img.shields.io/badge/Frontend-Pending-lightgrey" alt="Frontend Pending" />
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License MIT" />
+  <img src="https://img.shields.io/badge/Status-In%20Development-yellow" alt="Status In Development" />
 </p>
 
-## **Présentation**
+<p align="center">
+  <b>🇬🇧 English</b> | <a href="README.fr.md">🇫🇷 Français</a>
+</p>
 
-Ce dépôt contient le projet réalisé dans le cadre du cours de web  
-**Bachelier Informatique – Développement d’Applications**  
-**IPEFA Sup Seraing – Année académique 2025/2026**
 
-Il est structuré en plusieurs modules, dont une API NestJS complète située dans `backend-nest/`.
 
----
+## **Overview**
 
-## **Structure du dépôt**
+This repository contains the web project developed for the course:  
+**Bachelor in Computer Science – Application Development**  
+**IPEFA Sup Seraing – Academic Year 2025/2026**
 
-```
+It is organized into multiple modules, featuring a complete NestJS API located in the `backend-nest/` folder.
+
+<br/>
+
+## **Repository Structure**
+
+```text
 .
-├── backend-nest/        → API NestJS (auth, sécurité, migrations, Docker)
-├── frontend/            → futur client web
-├── docs/                → documentation, schémas, notes
-├── README.md            → ce fichier
-└── LICENSE              → licence du projet
+├── backend-nest/        → NestJS API (Auth, Security, Migrations, Docker)
+├── frontend/            → Future web client (Angular)
+├── docs/                → Detailed documentation, schemas, architecture
+├── README.fr.md         → French version
+├── README.md            → This file (English)
+└── LICENSE              → Project license
 ```
 
----
+<br/>
 
-## **Backend (NestJS)**
+## **Tech Stack**
 
-Le backend se trouve dans le dossier :
+### **Backend**
+- **Framework:** NestJS 10 (TypeScript 5)
+- **Database:** PostgreSQL & TypeORM
+- **Security:** JWT Access Token, JWT Refresh Token, Refresh Token Rotation, Bcrypt
+- **Documentation:** Swagger (OpenAPI)
+- **DevOps:** Docker & Docker Compose
 
-```
-backend-nest/
-```
+### **Frontend**
+- *Coming soon (Angular)*
 
-Il inclut :
+<br/>
 
-- Authentification JWT (Access + Refresh)
-- Rotation sécurisée des refresh tokens
-- Migrations TypeORM
-- Docker pour le développement
-- Swagger pour la documentation API
+## **Quick Start (Backend API)**
 
-👉 **Voir le README complet dans `backend-nest/`**  
-👉 Concepts clés :  
-- **JWT Access Token**  
-- **JWT Refresh Token**  
-- **Refresh Token Rotation**  
+The backend easily runs via Docker. From the project root:
 
----
-
-## **Lancement rapide (API)**
-
-Depuis la racine :
-
-```
+```bash
 cd backend-nest
 npm run docker:dev
 ```
 
-Swagger sera disponible sur :
+The interactive **Swagger** documentation will be immediately available at:
+👉 `http://localhost:3000/docs` *(or the port defined in your .env)*
 
-```
-http://localhost:3002/docs
-```
+<br/>
 
----
+## **Database & Migrations**
 
-## **Migrations**
+Inside the `backend-nest/` directory, TypeORM migrations ensure database schema integrity:
 
-Toujours dans `backend-nest/` :
-
-- Générer une migration :  
+- Generate a new migration:  
+  ```bash
+  npm run migration:generate -- src/migrations/MigrationName
   ```
-  npm run migration:generate -- src/migrations/<nom>
-  ```
-
-- Exécuter les migrations :  
-  ```
+- Run pending migrations:  
+  ```bash
   npm run migration:run
   ```
 
----
+<br/>
 
-## **Licence**
+## **Security & Authentication**
 
-Ce projet est distribué sous *[licence MIT](./LICENSE)*.  
+The backend implements a robust and modern security flow:
+- **Access Token (JWT):** Short-lived (15 min), transmitted via HTTP Header (`Bearer`).
+- **Refresh Token (JWT):** Long-lived (7 days), hashed and stored in the DB to allow revocation.
+- **Refresh Token Rotation:** Every use of a Refresh Token generates a new Access/Refresh pair, preventing replay attacks.
+- **NestJS Guards:** Fine-grained route protection (`JwtAuthGuard`, `RefreshTokenGuard`).
 
----
+<br/>
 
+## **Detailed Documentation**
 
-## **Contact**
+All in-depth documentation can be found in the [`docs/`](./docs) folder:
 
-Projet réalisé par **Gregory Colard**  
-IPEFA Sup Seraing – Promotion 2025/2026
+- [`docs/setup.md`](./docs/setup.md): Environment variables and installation guide.
+- [`docs/architecture.md`](./docs/architecture.md): Architectural choices, Design Patterns, Interceptors.
+- [`docs/auth.md`](./docs/auth.md): Detailed JWT mechanism, Rotation, Strategies, and Guards.
 
----
+<br/>
+
+## **License**
+
+This project is distributed under the *[MIT License](./LICENSE)*.  
+
+<br/>
+
+## **Author**
+
+Project developed by **Gregory Colard**  
+*IPEFA Sup Seraing – Class of 2025/2026*
