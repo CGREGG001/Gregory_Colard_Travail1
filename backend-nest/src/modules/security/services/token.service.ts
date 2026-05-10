@@ -63,4 +63,14 @@ export class TokenService {
           where: { credential: { id: credential.id } },
       });
   }
+
+  /**
+   * Removes the token session record for a given credential.
+   * Used for logging out a user.
+   * 
+   * @param credentialId - The ID of the credential whose session should be destroyed.
+   */
+  async removeByCredential(credentialId: string): Promise <void> {
+    await this.tokenRepository.delete({ credential: { id: credentialId} });
+  }
 }
