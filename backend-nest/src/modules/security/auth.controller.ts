@@ -73,10 +73,10 @@ export class AuthController {
      */
     @ApiBearerAuth('access-token')
     @ApiOperation({ summary: 'Logout a member', description: 'Invalidates the current session by deleting the refresh token.' })
-    @ApiResponse({ status: 200, description: 'Successfully logged out' })
+    @ApiResponse({ status: 204, description: 'Successfully logged out' })
     @UseGuards(JwtAuthGuard)
     @Post('logout')
-    @HttpCode(HttpStatus.OK)
+    @HttpCode(HttpStatus.NO_CONTENT)
     async logout(@Req() req: Request & { user: { sub: string } }): Promise<void> {
         await this.authService.logout(req.user.sub);
     }
