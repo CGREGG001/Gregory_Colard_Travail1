@@ -9,6 +9,8 @@ export enum ConfigKey {
     DB_USER = 'DB_USER',
     DB_PASSWORD = 'DB_PASSWORD',
     DB_DATABASE = 'DB_DATABASE',
+    
+    APP_BASE_URL = "APP_BASE_URL",
 }
 
 /**

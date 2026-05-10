@@ -6,6 +6,7 @@ import { addTransactionalDataSource, initializeTransactionalContext } from 'type
 import { DataSource } from 'typeorm';
 import { ValidationPipe } from '@nestjs/common';
 import { exceptionFactory } from '@core/exceptions/validation/validation-exception-factory';
+import { ApiInterceptor } from '@core/interceptors/api.interceptor';
 
 async function bootstrap() {
   // Initialize the CLS context to enable automatic transactions
@@ -26,7 +27,13 @@ async function bootstrap() {
 
   // Global filter to standardize HTTP error responses
   app.useGlobalFilters(new HttpExceptionFilter());
-  
+
+  // Global interceptor
+  app.useGlobalInterceptors(new ApiInterceptor());
+
+  // Prefix
+  app.setGlobalPrefix(process.env.APP_BASE_URL ?? 'api');
+
   // Swagger configuration
   swaggerConfiguration.config(app);
 
