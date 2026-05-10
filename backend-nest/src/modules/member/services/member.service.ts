@@ -59,14 +59,44 @@ export class MemberService {
         });
     }
 
+    /**
+     * Retrieves a member by its unique identifier.
+     *
+     * This method attempts to load the member from the database using its ID.
+     * If no matching member is found, a NotFoundException is thrown with the
+     * standardized API error code MEMBER_NOT_FOUND.
+     *
+     * @param id - The unique identifier of the member to retrieve.
+     * @returns The corresponding Member entity.
+     * @throws NotFoundException When no member exists with the provided ID.
+     */
     async findByIdOrFail(id: string): Promise<Member> {
         const member = await this.memberRepository.findOne({ where: { id } });
         
         if (!member) {
-            // Utilise ton énumération de codes d'erreur pour rester cohérent
             throw new NotFoundException(ApiCodeResponse.MEMBER_NOT_FOUND); 
         }
         
+        return member;
+    }
+
+    /**
+     * Retrieves a member by its unique identifier.
+     *
+     * This method attempts to load the member from the database using its ID.
+     * If no member is found, it returns null instead of throwing an exception.
+     * This is useful for flows where the absence of a member is not considered
+     * an error (e.g., logout, optional lookups).
+     *
+     * @param id - The unique identifier of the member to retrieve.
+     * @returns The Member entity if found, otherwise null.
+     */
+    async findById(id: string): Promise<Member | null> {
+        const member = await this.memberRepository.findOne({ where: { id } });
+        
+        if (!member){
+            return null;
+        }
         return member;
     }
 
