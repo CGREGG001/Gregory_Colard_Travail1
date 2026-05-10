@@ -1,7 +1,8 @@
-import { Controller, Delete, Get, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { MemberService } from '@member/services';
 import { ApiOperation } from '@nestjs/swagger';
 import { 
+    MemberControllerCreateDocumentation,
     MemberControllerDeleteDocumentation,
     MemberControllerDetailsDocumentation,
     MemberControllerListDocumentation,
@@ -13,27 +14,33 @@ export class MemberController {
 
     constructor(private readonly memberService: MemberService) {}
 
-    @ApiOperation(MemberControllerDetailsDocumentation)
-    @Get(':id')
-    getInfo(): string {
-        return this.memberService.getMemberInfo();
+    @ApiOperation(MemberControllerCreateDocumentation)
+    @Post()
+    async create(@Body() payload: any) { // Payload à typer plus tard
+        // TODO
     }
-
+    
     @ApiOperation(MemberControllerListDocumentation)
     @Get()
-    getList(): string[] {
-        return this.memberService.getMemberList();
+    async getList() {
+        // TODO
+    }
+
+    @ApiOperation(MemberControllerDetailsDocumentation)
+    @Get(':id')
+    async getInfo(@Param('id') id: string) {
+        // TODO
     }
 
     @ApiOperation(MemberControllerUpdateDocumentation)
     @Put(':id')
-    update() {
-        return this.memberService.updateMember();
+    async update(@Param('id') id: string, @Body() payload: any) {
+        // TODO
     }
 
     @ApiOperation(MemberControllerDeleteDocumentation)
     @Delete(':id')
-    remove() {
-        return this.memberService.removeMember();
+    async remove(@Param('id') id: string) {
+        // TODO
     }
 }
