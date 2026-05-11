@@ -1,14 +1,8 @@
 <br>
 
-# 🔐 Sécurité & Authentification
+# Sécurité & Authentification
 
 Ce document explique le flux d'authentification, la gestion des jetons et les stratégies de sécurité implémentées dans l'API.
-
-<p align="center">
-  <b>🇫🇷 Français</b> | <a href="auth.md">🇬🇧 English</a>
-</p>
-
-<br>
 
 ## 1. Le Flux JWT (JSON Web Token)
 
@@ -59,5 +53,5 @@ La sécurité est appliquée jusqu'au niveau de la base de données :
 
 <br>
 <p align="right">
-  <a href="../README.md">⬅ Back to main README</a>
+  <a href="../index.fr.md">⬅ Retour à l'index</a>
 </p>

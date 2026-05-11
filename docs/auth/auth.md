@@ -1,13 +1,8 @@
 <br>
 
-# 🔐 Authentication & Security
+# Authentication & Security
 
 This document explains the authentication flow, token management, and security strategies implemented in the API.
-
-<br>
-<p align="center">
-  <b>🇬🇧 English</b> | <a href="auth.fr.md">🇫🇷 Français</a>
-</p>
 
 ## 1. The JWT Flow
 
@@ -57,5 +52,5 @@ Security is enforced at the database level:
 
 <br>
 <p align="right">
-  <a href="../README.md">⬅ Back to main README</a>
+  <a href="../index.md">⬅ Back to index</a>
 </p>
