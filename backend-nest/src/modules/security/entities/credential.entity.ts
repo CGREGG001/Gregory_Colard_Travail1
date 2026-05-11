@@ -44,7 +44,7 @@ export class Credential {
     @UpdateDateColumn({ name: 'updated_at' })
     updatedAt!: Date;
 
-    @DeleteDateColumn({ name: 'deleted_at' })
+    @DeleteDateColumn({ name: 'deleted_at', select : false })
     deletedAt!: Date;
 
     /**

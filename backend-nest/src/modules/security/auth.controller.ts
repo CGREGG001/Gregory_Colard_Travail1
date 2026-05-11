@@ -5,7 +5,8 @@ import { ApiOperation, ApiResponse, ApiBody, ApiTags, ApiBearerAuth } from '@nes
 
 import { SignupDto, SigninDto, SigninResponseDto } from '@security/dtos';
 import { MemberDto } from '@member/dtos';
-import { RefreshTokenGuard } from '@security/guards';
+import { JwtAuthGuard, RefreshTokenGuard } from '@security/guards';
+import { CurrentUser } from '@core/decorators';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -60,8 +61,23 @@ export class AuthController {
     @ApiOperation({ summary: 'Refresh session tokens', description: 'Rotates the current refresh token to provide a new set of credentials.' })
     @UseGuards(RefreshTokenGuard)
     @Post('refresh')
-    async refresh(@Req() req: Request & { user: { sub: string; refreshToken: string } }) {
-        const { sub, refreshToken } = req.user;
-        return this.authService.refreshTokens(sub, refreshToken);
+    async refresh(@CurrentUser() user: { sub: string; refreshToken: string}) {
+        return this.authService.refreshTokens(user.sub, user.refreshToken);
+    }
+
+    /**
+     * Logs out the current user by invalidating their refresh token.
+     * Requires a valid Access Token.
+     * 
+     * @param req - The request object containing the user payload.
+     */
+    @ApiBearerAuth('access-token')
+    @ApiOperation({ summary: 'Logout a member', description: 'Invalidates the current session by deleting the refresh token.' })
+    @ApiResponse({ status: 204, description: 'Successfully logged out' })
+    @UseGuards(JwtAuthGuard)
+    @Post('logout')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async logout(@CurrentUser() user: { sub: string }): Promise<void> {
+        await this.authService.logout(user.sub);
     }
 }

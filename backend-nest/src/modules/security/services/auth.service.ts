@@ -133,6 +133,24 @@ export class AuthService {
     }
 
     /**
+     * Logs out a user by destroying their refresh token in the database.
+     * 
+     * @param memberId - The ID of the member to log out.
+     */
+    @Transactional()
+    async logout(memberID: string): Promise<void> {
+        const member = await this.memberService.findById(memberID);
+        if(!member) {
+            return; // logout must be quiet (REST standard)      
+        }
+
+        const credential = await this.credentialService.findByMember(member);
+        if (credential) {
+            await this.tokenService.removeByCredential(credential.id);
+        }
+    }
+
+    /**
      * Generates a new pair of Access and Refresh JWT tokens for a given member.
      * The refresh token is hashed and persisted in the database for future validation (Rotation).
      * 

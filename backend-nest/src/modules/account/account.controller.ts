@@ -1,27 +1,29 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
-import { AccountService } from '@account/services/account.service';
-import { JwtAuthGuard } from '@security/guards';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+import { JwtAuthGuard } from '@security/guards';
+import { MemberService } from '@member/services';
+import { MemberDto } from '@member/dtos';
+import { CurrentUser } from '@core/decorators';
+
+@ApiTags('Account')
+@ApiBearerAuth('access-token')
+@UseGuards(JwtAuthGuard)
 @Controller('account')
 export class AccountController {
 
-    constructor(private readonly accountService: AccountService) {}
-    
-    @ApiBearerAuth('access-token')
-    @UseGuards(JwtAuthGuard)
-    @Get('status')
-    getStatus(): string {
-        return this.accountService.getAccountStatus();
-    }
+    constructor(private readonly memberService: MemberService) {}
 
-    @Get('details')
-    getDetails():string {
-        return this.accountService.getAccountDetails();
-    }
-
-    @Get('list')
-    getAccounts():string[] {
-        return this.accountService.getAccountList();
+    /**
+     * Retrieves the profile of the currently authenticated user.
+     */
+    @ApiOperation({ summary: 'Get current user profile' })
+    @ApiResponse({ status: 200, description: 'Current user details', type: MemberDto })
+    @Get('me')
+    async getMe(@CurrentUser('sub') memberId: string): Promise<MemberDto> {
+        // user.sub comes from JwtAuthGuard
+        const member = await this.memberService.findByIdOrFail(memberId);
+        
+        return new MemberDto(member);
     }
 }
