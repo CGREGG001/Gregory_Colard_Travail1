@@ -43,7 +43,7 @@ export class Member {
     email!: string;
 
     @Column()
-    @Index('uq_member_nickName', { unique: true }) // Explicit constraint name for AuthService
+    @Index('uq_member_nickname', { unique: true }) // Explicit constraint name for AuthService
     nickname!: string;
 
     // Role of the member for managing permissions.
