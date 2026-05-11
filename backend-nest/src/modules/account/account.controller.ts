@@ -20,9 +20,10 @@ export class AccountController {
     @ApiOperation({ summary: 'Get current user profile' })
     @ApiResponse({ status: 200, description: 'Current user details', type: MemberDto })
     @Get('me')
-    async getMe(@CurrentUser() user: { sub: string }): Promise<MemberDto> {
+    async getMe(@CurrentUser('sub') memberId: string): Promise<MemberDto> {
         // user.sub comes from JwtAuthGuard
-        const member = await this.memberService.findByIdOrFail(user.sub);
+        const member = await this.memberService.findByIdOrFail(memberId);
+        
         return new MemberDto(member);
     }
 }
