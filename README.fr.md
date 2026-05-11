@@ -93,13 +93,22 @@ Le backend implémente un flux de sécurité robuste et moderne :
 
 <br/>
 
-## **Documentation Détaillée**
+## Documentation
 
-Toute la documentation approfondie se trouve dans le dossier [`docs/`](./docs) :
+Toute la documentation du projet est organisée par domaine pour une meilleure lisibilité et une maintenance à long terme.
 
-- [`docs/setup.md`](./docs/setup.fr.md) : Variables d’environnement et guide d'installation.
-- [`docs/architecture.md`](./docs/architecture.fr.md) : Choix architecturaux, Design Patterns, Intercepteurs.
-- [`docs/auth.md`](./docs/auth.fr.md) : Mécanisme détaillé du JWT, Rotation, Stratégies et Guards.
+- **Architecture**    
+  - [Architecture](docs/architecture/architecture.fr.md)
+
+- **Installation & Configuration**   
+  - [Guide d’installation](docs/setup/setup.fr.md)
+
+- **Authentification & Sécurité**   
+  - [Authentification](docs/auth/auth.fr.md)
+
+L’index global de la documentation est disponible ici :  
+👉 [**Index de la documentation**](docs/index.fr.md)
+
 
 <br/>
 
