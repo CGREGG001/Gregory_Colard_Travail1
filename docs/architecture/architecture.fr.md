@@ -4,14 +4,6 @@
 
 Ce document détaille les choix architecturaux et les design patterns utilisés pour garantir que cette API NestJS soit robuste, évolutive et "Corporate-grade".
 
-<br>
-
-<p align="center">
-  <b>🇫🇷 Français</b> | <a href="architecture.md">🇬🇧 English</a>
-</p>
-
-<br>
-
 ## 1. Philosophie et Modèle (Separation of Concerns)
 L'application suit une architecture modulaire stricte basée sur le principe de **Séparation des Préoccupations (SoC)**. Le code est divisé en deux grandes zones : le `core` et les `modules`.
 
@@ -56,7 +48,7 @@ Les données critiques (comme les mots de passe) sont protégées de deux maniè
 <br>
 
 ## 4. Flux de Sécurité (Authentification & Autorisation)
-*Voir la documentation détaillée dans [auth.md](./auth.md).*
+*Voir la documentation détaillée dans [auth.md](../auth/auth.fr.md).*
 
 Le système repose sur un mécanisme de **Refresh Token Rotation** :
 1. Les accès sont validés de manière *stateless* via des **Access Tokens** courts (15 min) transmis en header HTTP (`Bearer`).
@@ -66,5 +58,5 @@ Le système repose sur un mécanisme de **Refresh Token Rotation** :
 <br>
 
 <p align="right">
-  <a href="../README.fr.md">⬅ Retour au README principal</a>
+  <a href="../index.fr.md">⬅ Retour à l'index</a>
 </p>

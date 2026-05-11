@@ -4,12 +4,6 @@
 
 Ce guide détaille les étapes nécessaires pour configurer, lancer et gérer l'environnement de l'API NestJS.
 
-<br>
-
-<p align="center">
-  <b>🇫🇷 Français</b> | <a href="setup.md">🇬🇧 English</a>
-</p>
-
 ## 1. Prérequis
 
 Assurez-vous d'avoir les éléments suivants installés sur votre machine :
@@ -121,5 +115,5 @@ Une fois lancée, accédez au **Swagger UI** sur : `http://localhost:3000/docs`
 
 <br>
 <p align="right">
-  <a href="../README.fr.md">⬅ Back to main README</a>
+  <a href="../index.fr.md">⬅ retour à l'index</a>
 </p>
