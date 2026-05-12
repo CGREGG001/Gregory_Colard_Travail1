@@ -6,7 +6,7 @@ import { ApiOperation, ApiResponse, ApiBody, ApiTags, ApiBearerAuth } from '@nes
 import { SignupDto, SigninDto, SigninResponseDto } from '@security/dtos';
 import { MemberDto } from '@member/dtos';
 import { JwtAuthGuard, RefreshTokenGuard } from '@security/guards';
-import { CurrentUser } from '@core/decorators';
+import { CurrentUser, Public } from '@core/decorators';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -19,6 +19,7 @@ export class AuthController {
      * @param signupDto - Data required for registration (email, nickname, password, role).
      * @returns The newly created member profile as a DTO.
      */
+    @Public()
     @Post('signup')
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Register a new member' })
@@ -35,6 +36,7 @@ export class AuthController {
      * @param signinDto - Credentials (email/password).
      * @returns An object containing the member profile and the pair of JWT tokens (Access & Refresh).
      */
+    @Public()
     @Post('signin')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Authenticate a member' })
@@ -57,9 +59,10 @@ export class AuthController {
      * @param req - The request object containing the user payload from the RefreshTokenGuard.
      * @returns A new pair of Access and Refresh tokens.
      */
+    @Public()
+    @UseGuards(RefreshTokenGuard)
     @ApiBearerAuth('refresh-token')
     @ApiOperation({ summary: 'Refresh session tokens', description: 'Rotates the current refresh token to provide a new set of credentials.' })
-    @UseGuards(RefreshTokenGuard)
     @Post('refresh')
     async refresh(@CurrentUser() user: { sub: string; refreshToken: string}) {
         return this.authService.refreshTokens(user.sub, user.refreshToken);

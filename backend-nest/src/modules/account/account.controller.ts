@@ -1,14 +1,12 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { JwtAuthGuard } from '@security/guards';
 import { MemberService } from '@member/services';
 import { MemberDto } from '@member/dtos';
 import { CurrentUser } from '@core/decorators';
 
 @ApiTags('Account')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
 @Controller('account')
 export class AccountController {
 
