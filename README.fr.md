@@ -105,6 +105,13 @@ Toute la documentation du projet est organisée par domaine pour une meilleure l
 
 - **Authentification & Sécurité**   
   - [Authentification](docs/auth/auth.fr.md)
+  - [Jwt-flow](docs/auth/token-flow.fr.md)
+
+- **Guards d’Authentification**
+  - [Guards](docs/auth/guards.fr.md)
+
+- **Décorateurs d’Authentification**
+  - [Décorateurs](docs/auth/decorators.fr.md)
 
 L’index global de la documentation est disponible ici :  
 👉 [**Index de la documentation**](docs/index.fr.md)
