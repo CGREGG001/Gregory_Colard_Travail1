@@ -106,7 +106,14 @@ All project documentation is organized by domain for clarity and long-term maint
   - [Setup Guide](docs/setup/setup.md)  
 
 - **Authentication & Security**  
-  - [Authentication](docs/auth/auth.md)  
+  - [Authentication](docs/auth/auth.md)
+  - [Jwt-flow](docs/auth/token-flow.md)
+
+- **Authentification Guards**
+  - [Guards](docs/auth/guards.md)
+
+- **Authentification Decorators**
+  - [Décorateurs](docs/auth/decorators.md)
 
 A global documentation index is available here:  
 👉 [**Documentation Index**](docs/index.md)

@@ -2,30 +2,44 @@
 
 # Index de la documentation
 Bienvenue dans l’espace documentation du projet.
-Les guides sont organisés par domaine afin de garantir une structure claire, évolutive et facile à naviguer.
-
-<br>
+La documentation sont organisée par domaine afin de garantir une structure claire, évolutive et facile à naviguer.
 
 ## Architecture
 Concepts fondamentaux, structure interne du backend, organisation des modules et principes de conception.
 
 - [Architecture](./architecture/architecture.fr.md)
 
-<br>
 
 ## Installation & Configuration
 Configuration de l’environnement, utilisation de Docker, scripts, migrations et démarrage du projet.
 
 - [Guide d’installation](./setup/setup.fr.md)
 
-<br>
 
 ## Authentification & Sécurité
 Fonctionnement du JWT, rotation des refresh tokens, guards, décorateurs personnalisés et bonnes pratiques de sécurité.
 
 - [Authentification](./auth/auth.fr.md)
+- [Jwt-flow](./auth/token-flow.md)
 
-<br>
+
+## Guards d’Authentification
+Documentation détaillée sur les guards utilisés pour la sécurité :
+
+- Secure by Default
+- JwtAuthGuard
+- RefreshTokenGuard
+- Interaction avec les décorateurs
+- [Guards](./auth/guards.fr.md)
+
+
+## Décorateurs d’Authentification
+Documentation sur les décorateurs personnalisés :
+
+- @CurrentUser()
+- @Public()
+- Métadonnées et interaction avec les guards
+- [Décorateurs](./auth/decorators.fr.md)
 
 ## À propos de cette structure
 La documentation est organisée par domaine pour éviter l’encombrement et faciliter l’évolution du projet.
