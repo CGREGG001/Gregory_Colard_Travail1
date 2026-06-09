@@ -22,3 +22,14 @@ export interface AuthResponse {
   user: User;
   accessToken: string;
 }
+
+/**
+ * Payload required for the registration process.
+ * Matches the backend SignupDto.
+ */
+export interface RegisterPayload {
+  email: string;
+  nickname: string;
+  password: string;
+  role: string;
+}
