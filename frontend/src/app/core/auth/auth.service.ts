@@ -1,7 +1,7 @@
 import { Injectable, signal, inject, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap, map, Observable } from 'rxjs';
-import { AuthResponse, User, ApiResponse } from '@core/models/api.model';
+import { AuthResponse, User, ApiResponse, RegisterPayload } from '@core/models/api.model';
 import { environment } from '@env/environment';
 
 
@@ -50,6 +50,18 @@ export class AuthService {
         this._accessToken.set(data.accessToken);
         this.currentUser.set(data.user);
       })
+    );
+  }
+
+  /**
+   * Registers a new user.
+   * @param payload - The user registration data.
+   * @returns An observable of the API response containing the created User.
+   */
+  register(payload: RegisterPayload): Observable<ApiResponse<User>> {
+    return this.http.post<ApiResponse<User>>(
+      `${environment.apiUrl}/auth/signup`, 
+      payload
     );
   }
 
