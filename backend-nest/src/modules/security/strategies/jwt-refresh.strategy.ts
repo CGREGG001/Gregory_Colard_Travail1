@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
-import { Strategy, ExtractJwt } from "passport-jwt";
+import { Strategy } from "passport-jwt";
 import { Request } from 'express';
 
 /**
@@ -18,8 +18,14 @@ import { Request } from 'express';
 export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(config: ConfigService) {
     super({
-        // Extracts the JWT from the "Authorization: Bearer <token>" header
-        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        // Extracts the JWT from cookies
+        jwtFromRequest: (req: Request) => {
+            let token = null;
+            if (req && req.cookies) {
+                token = req.cookies['refresh_token'];
+            }
+            return token;
+        },
         // Uses a specific secret for refresh tokens for enhanced security
         secretOrKey: config.getOrThrow('JWT_REFRESH_TOKEN_SECRET'),
         // Allows the request object to be passed to the validate method
@@ -36,7 +42,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh'
    * @throws UnauthorizedException if the token is missing from the Authorization header
    */
     validate(req: Request, payload: any) {
-    const refreshToken = req.headers.authorization?.replace('Bearer ', '');
+    const refreshToken = req.cookies['refresh_token'];
 
     if (!refreshToken) {
         throw new UnauthorizedException();
