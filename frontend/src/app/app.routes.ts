@@ -1,3 +1,17 @@
 import { Routes } from '@angular/router';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+    {
+        path: '',
+        redirectTo: 'login',
+        pathMatch: 'full'
+    },
+    {
+        path: 'login',
+        loadComponent: () => import('@features/auth/login/login').then(m => m.Login)
+    },
+    {
+        path: '**',
+        redirectTo: 'login' // Fallback si la route n'existe pas
+    }
+];
