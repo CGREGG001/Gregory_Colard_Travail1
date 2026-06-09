@@ -1,7 +1,7 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from '@security/services/auth.service';
 import { ApiOperation, ApiResponse, ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import type { Response } from 'express';
 
 import { SignupDto, SigninDto, SigninResponseDto } from '@security/dtos';
 import { MemberDto } from '@member/dtos';
@@ -43,12 +43,19 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'Authentication successful', type: SigninResponseDto })
     @ApiResponse({ status: 401, description: 'Invalid credentials' })
     @ApiBody({ type: SigninDto })
-    async signin(@Body() signinDto: SigninDto): Promise<SigninResponseDto> {
+    async signin(@Body() signinDto: SigninDto, @Res({ passthrough: true }) response: Response): Promise<SigninResponseDto> {
         const { member, accessToken, refreshToken } = await this.authService.signin(signinDto);
+
+        response.cookie('refresh_token', refreshToken, {
+            httpOnly: true,
+            secure: false, // Put at true to production (HTTPS)
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
         return {
             user: new MemberDto(member),
-            accessToken,
-            refreshToken
+            accessToken
         };
     }
 
@@ -64,7 +71,18 @@ export class AuthController {
     @ApiBearerAuth('refresh-token')
     @ApiOperation({ summary: 'Refresh session tokens', description: 'Rotates the current refresh token to provide a new set of credentials.' })
     @Post('refresh')
-    async refresh(@CurrentUser() user: { sub: string; refreshToken: string}) {
+    async refresh(
+        @CurrentUser() user: { sub: string; refreshToken: string},
+        @Res({ passthrough: true }) response: Response
+    ) {
+        const { accessToken, refreshToken } = await this.authService.refreshTokens(user.sub, user.refreshToken);
+
+        response.cookie('refresh_token', refreshToken, {
+            httpOnly: true,
+            secure: false, // true on production
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        })
         return this.authService.refreshTokens(user.sub, user.refreshToken);
     }
 

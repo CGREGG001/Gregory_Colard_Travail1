@@ -7,6 +7,7 @@ import { DataSource } from 'typeorm';
 import { ValidationPipe } from '@nestjs/common';
 import { exceptionFactory } from '@core/exceptions/validation/validation-exception-factory';
 import { ApiInterceptor } from '@core/interceptors/api.interceptor';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   // Initialize the CLS context to enable automatic transactions
@@ -36,6 +37,20 @@ async function bootstrap() {
 
   // Swagger configuration
   swaggerConfiguration.config(app);
+
+  /**
+   * Enables automatic parsing of incoming cookies.
+   *
+   * Required for reading the HttpOnly refresh token sent by the client.
+   * Without this middleware, NestJS cannot access `req.cookies`.
+   */
+  app.use(cookieParser());
+  
+  // Configures CORS to allow the Angular frontend to communicate with the API.
+  app.enableCors({
+  origin: 'http://localhost:4200',
+  credentials: true,
+});
 
   await app.listen(process.env.PORT ?? 3000);
 }
