@@ -1,1 +1,41 @@
-<p>dashboard works!</p>
+<div class="dashboard-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      Maison<span>Recette</span>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/dashboard/recipes" routerLinkActive="active">Recettes</a>
+      <a routerLink="/dashboard/members" routerLinkActive="active">Mes infos</a>
+    </nav>
+
+    <button (click)="onLogout()" class="logout-btn">Déconnexion</button>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content">
+    <header class="content-header">
+      <h1>Tableau de bord</h1>
+      <button class="btn-primary" (click)="addRecipe()">+ Ajouter Recette</button>
+    </header>
+
+    <section class="recipes-grid">
+      @for (recipe of recipes(); track recipe.id) {
+        <article class="recipe-card">
+          <div class="card-img-placeholder"></div>
+
+          <div class="card-body">
+            <h3>{{ recipe.title }}</h3>
+            <p>{{ recipe.description }}</p>
+
+            <div class="actions">
+              <button (click)="editRecipe(recipe.id)">✏️</button>
+              <button (click)="deleteRecipe(recipe.id)" class="delete">🗑️</button>
+            </div>
+          </div>
+        </article>
+      }
+    </section>
+  </main>
+</div>
