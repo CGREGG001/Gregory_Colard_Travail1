@@ -11,6 +11,7 @@ import { AuthService } from '@core/auth/auth.service';
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
 import { authInterceptor } from '@core/interceptors/auth.interceptor';
 import { catchError, of } from 'rxjs';
+import { errorInterceptor } from '@core/interceptors/error.interceptor';
 
 function initializeApp() {
   const authService = inject(AuthService);
@@ -24,7 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideZonelessChangeDetection(), 
-    provideHttpClient(withInterceptors([authInterceptor]), withFetch()),
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]), withFetch()),
     provideAppInitializer(initializeApp),
   ]
 };
