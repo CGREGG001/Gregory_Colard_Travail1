@@ -1,12 +1,12 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from '@security/services/auth.service';
 import { ApiOperation, ApiResponse, ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import type { Response } from 'express';
 
 import { SignupDto, SigninDto, SigninResponseDto } from '@security/dtos';
 import { MemberDto } from '@member/dtos';
 import { JwtAuthGuard, RefreshTokenGuard } from '@security/guards';
-import { CurrentUser } from '@core/decorators';
+import { CurrentUser, Public } from '@core/decorators';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -19,6 +19,7 @@ export class AuthController {
      * @param signupDto - Data required for registration (email, nickname, password, role).
      * @returns The newly created member profile as a DTO.
      */
+    @Public()
     @Post('signup')
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Register a new member' })
@@ -35,18 +36,26 @@ export class AuthController {
      * @param signinDto - Credentials (email/password).
      * @returns An object containing the member profile and the pair of JWT tokens (Access & Refresh).
      */
+    @Public()
     @Post('signin')
     @HttpCode(HttpStatus.OK)
     @ApiOperation({ summary: 'Authenticate a member' })
     @ApiResponse({ status: 200, description: 'Authentication successful', type: SigninResponseDto })
     @ApiResponse({ status: 401, description: 'Invalid credentials' })
     @ApiBody({ type: SigninDto })
-    async signin(@Body() signinDto: SigninDto): Promise<SigninResponseDto> {
+    async signin(@Body() signinDto: SigninDto, @Res({ passthrough: true }) response: Response): Promise<SigninResponseDto> {
         const { member, accessToken, refreshToken } = await this.authService.signin(signinDto);
+
+        response.cookie('refresh_token', refreshToken, {
+            httpOnly: true,
+            secure: false, // Put at true to production (HTTPS)
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        });
+
         return {
             user: new MemberDto(member),
-            accessToken,
-            refreshToken
+            accessToken
         };
     }
 
@@ -57,11 +66,23 @@ export class AuthController {
      * @param req - The request object containing the user payload from the RefreshTokenGuard.
      * @returns A new pair of Access and Refresh tokens.
      */
+    @Public()
+    @UseGuards(RefreshTokenGuard)
     @ApiBearerAuth('refresh-token')
     @ApiOperation({ summary: 'Refresh session tokens', description: 'Rotates the current refresh token to provide a new set of credentials.' })
-    @UseGuards(RefreshTokenGuard)
     @Post('refresh')
-    async refresh(@CurrentUser() user: { sub: string; refreshToken: string}) {
+    async refresh(
+        @CurrentUser() user: { sub: string; refreshToken: string},
+        @Res({ passthrough: true }) response: Response
+    ) {
+        const { accessToken, refreshToken } = await this.authService.refreshTokens(user.sub, user.refreshToken);
+
+        response.cookie('refresh_token', refreshToken, {
+            httpOnly: true,
+            secure: false, // true on production
+            sameSite: 'lax',
+            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        })
         return this.authService.refreshTokens(user.sub, user.refreshToken);
     }
 

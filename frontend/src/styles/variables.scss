@@ -1,0 +1,13 @@
+// COLORS
+$color-bg-dark: #121417;        // Fond ardoise très sombre
+$color-surface: rgba(255, 255, 255, 0.05); // Base pour le verre
+$color-accent-purple: #4a3a5a;  // Ton raisin/figue
+$color-accent-cream: #f3e5ab;   // Ton jaune d'œuf doux
+$color-text-main: #e0e0e0;
+$color-text-muted: #a0a0a0;
+$color-text-error: #ff4d4d;
+
+// EFFECTS
+$glass-blur: blur(16px);
+$glass-border: 1px solid rgba(255, 255, 255, 0.1);
+$transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

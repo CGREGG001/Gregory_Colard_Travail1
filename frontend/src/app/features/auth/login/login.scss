@@ -1,0 +1,144 @@
+@use 'variables' as *;
+
+.auth-wrapper {
+  display: flex;
+  max-width: 1800px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background-color: $color-bg-dark;
+  color: $color-text-main;
+
+  .auth-visual {
+    flex: 1;
+    background: url('/assets/pictures/login-bg.avif') center/cover no-repeat;
+    display: none;
+
+    @media (min-width: 1024px) { // Desktop & iPad Pro
+      display: block;
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to right, transparent, $color-bg-dark);
+      }
+    }
+
+    .brand-overlay {
+      position: relative;
+      z-index: 2;
+      padding: 60px;
+      h1 { 
+        font-size: 3rem;
+        span { color: $color-accent-cream; }
+      }
+    }
+  }
+
+  .auth-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    .glass-card {
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+      background: $color-surface;
+      backdrop-filter: $glass-blur;
+      border: $glass-border;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+
+      h2 { margin-bottom: 8px; font-weight: 600; }
+      .subtitle { color: $color-text-muted; margin-bottom: 32px; }
+
+      .input-group {
+        position: relative;
+        margin-bottom: 24px;
+
+        input {
+          width: 100%;
+          padding: 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          color: white;
+          transition: $transition-smooth;
+
+          &:focus {
+            outline: none;
+            border-color: $color-accent-cream;
+            background: rgba(255, 255, 255, 0.07);
+          }
+        }
+
+        label {
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: $color-text-muted;
+          pointer-events: none;
+          transition: $transition-smooth;
+        }
+
+        // Floating label logic
+        input:focus + label,
+        input:not(:placeholder-shown) + label {
+          top: -10px;
+          left: 12px;
+          font-size: 0.8rem;
+          color: $color-accent-cream;
+          padding: 0 8px;
+        }
+      }
+    }
+
+    // Error message
+    .error-msg{
+      color: $color-text-error;
+      margin-bottom: 16px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+  }
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 16px;
+  background: $color-accent-cream;
+  color: black;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: $transition-smooth;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(243, 229, 171, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.switch-auth {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: $color-text-muted;
+    a {
+      color: $color-accent-cream;
+      text-decoration: none;
+      font-weight: 600;
+    }
+}
