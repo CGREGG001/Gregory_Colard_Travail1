@@ -1,0 +1,39 @@
+<div class="auth-wrapper">
+  <!-- Section Image (Côté gauche) -->
+  <div class="auth-visual" aria-hidden="true">
+    <div class="brand-overlay">
+      <h1>Maison<span>Recette</span></h1>
+      <p>L'excellence culinaire.</p>
+    </div>
+  </div>
+
+  <!-- Section Formulaire (Côté droit) -->
+  <div class="auth-content">
+    <div class="glass-card">
+      <h2>Bon retour parmi nous</h2>
+      <p class="subtitle">Connectez-vous pour accéder à votre espace.</p>
+
+      <form role="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="input-group">
+          <input type="email" formControlName="email" id="email" required placeholder=" " aria-label="Adresse email">
+          <label for="email">Adresse Email</label>
+        </div>
+
+        <div class="input-group">
+          <input type="password" formControlName="password" id="password" required placeholder=" " aria-label="Mot de passe">
+          <label for="password">Mot de passe</label>
+        </div>
+
+        @if (errorMessage()) {
+          <div class="error-msg" aria-live="assertive">{{ errorMessage() }}</div>
+        }
+
+        <button type="submit" [disabled]="loginForm.invalid || isLoading()" class="btn-primary" [attr.aria-busy]="isLoading()">
+          {{ isLoading() ? 'Validation...' : 'Se connecter' }}
+        </button>
+      </form>
+      
+      <p class="switch-auth">Pas de compte ? <a routerLink="/register">Créer un profil</a></p>
+    </div>
+  </div>
+</div>

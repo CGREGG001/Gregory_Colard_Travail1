@@ -1,0 +1,41 @@
+<div class="auth-wrapper signup-mode">
+  <div class="auth-content">
+    <div class="glass-card">
+      <div class="header">
+        <h2>Créer un profil</h2>
+        <p class="subtitle">Rejoignez la communauté Maison Recette.</p>
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Grille pour compacter le formulaire sur desktop -->
+        <div class="form-grid">
+          <div class="input-group">
+            <input type="text" autocomplete="nickname" formControlName="nickname" id="nickname" required placeholder=" ">
+            <label for="nickname">Pseudo</label>
+          </div>
+
+          <div class="input-group">
+            <input type="email" autocomplete="email" formControlName="email" id="email" required placeholder=" ">
+            <label for="email">Adresse Email</label>
+          </div>
+
+          <div class="input-group">
+            <input type="password" autocomplete="new-paswword" formControlName="password" id="password" required placeholder=" ">
+            <label for="password">Mot de passe</label>
+          </div>
+
+        </div>
+
+        @if (errorMessage()) {
+          <div class="error-msg" aria-live="assertive" role="alert">{{ errorMessage() }}</div>
+        }
+
+        <button type="submit" [disabled]="registerForm.invalid || isLoading()" class="btn-primary">
+          {{ isLoading() ? 'Création...' : 'S\'inscrire' }}
+        </button>
+      </form>
+      
+      <p class="switch-auth">Déjà inscrit ? <a routerLink="/login">Se connecter</a></p>
+    </div>
+  </div>
+</div>
