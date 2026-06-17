@@ -20,7 +20,7 @@
       "@shared/*":["./app/shared/*"],
       "@env/*": ["./app/environments/*"],
       "@features/*": ["./app/features/*"],
-      "@api/*": ["./app/shared/api/index.ts"]
+      "@api/*": ["./app/core/api/*"]
     }
   },
   "angularCompilerOptions": {
