@@ -23,7 +23,10 @@ Ce dépôt contient le projet réalisé dans le cadre du cours de web
 **Bachelier Informatique – Développement d’Applications**  
 **IPEFA Sup Seraing – Année académique 2025/2026**
 
-Il est structuré en plusieurs modules, dont une API NestJS complète située dans `backend-nest/`.
+Il inclut :
+- Une API backend complète en NestJS (backend-nest/)
+- Un frontend moderne en Angular (frontend/)
+- De la documentation, des schémas et des guides d’installation (docs/)
 
 <br/>
 
@@ -42,20 +45,45 @@ Il est structuré en plusieurs modules, dont une API NestJS complète située da
 
 ## **Stack Technique**
 
-### **Backend**
+### **Backend (NestJS)**
 - **Framework :** NestJS 10 (TypeScript 5)
 - **Database :** PostgreSQL & TypeORM
 - **Sécurité :** JWT Access Token, JWT Refresh Token, Refresh Token Rotation, Bcrypt
 - **Documentation :** Swagger (OpenAPI)
 - **DevOps :** Docker & Docker Compose
 
-### **Frontend**
-- *À venir (Angular)*
+### **Frontend (Angular 21)**
+Le frontend est développé avec Angular 21, utilisant :
+
+- **Standalone Components**
+
+- **Signals** pour la gestion d’état
+
+- **Angular Router** avec lazy loading
+
+- **Structure moderne :**
+
+  - core/ → services, auth, interceptors, layouts
+  - features/ → dashboard, recettes, membres
+  - shared/ → composants UI réutilisables
+
+- **Flux d’authentification :**
+
+  - Login / Register
+  - Access Token + Refresh Token (géré via interceptor)
+  - Routes protégées via guards
+
+- **Interface :**
+
+  - Layout authentifié avec sidebar
+  - Dashboard listant les recettes
+  - CRUD des recettes (en cours)
 
 <br/>
 
-## **Lancement Rapide (API Backend)**
+## **Lancement Rapide**
 
+### Backend
 Le backend s'exécute facilement via Docker. Depuis la racine du projet :
 
 ```bash
@@ -65,6 +93,17 @@ npm run docker:dev
 
 La documentation interactive **Swagger** sera immédiatement disponible sur :
 👉 `http://localhost:3000/docs` *(ou le port défini dans votre .env)*
+
+### Frontend
+Le frontend se lance via Angular CLI :
+
+```bash
+cd frontend
+npm install
+npm start
+```
+Serveur Angular :
+👉 `http://localhost:4200`
 
 <br/>
 
@@ -91,6 +130,10 @@ Le backend implémente un flux de sécurité robuste et moderne :
 - **Refresh Token Rotation** : Chaque utilisation du Refresh Token génère un nouveau couple Access/Refresh, prévenant les attaques par rejeu.
 - **Guards NestJS** : Protection fine des routes (`JwtAuthGuard`, `RefreshTokenGuard`).
 
+Le frontend gère :
+- **Le rafraîchissement automatique des tokens** via interceptor
+- **La redirection** en cas de 401/403
+- **Le logout + révocation du token**
 <br/>
 
 ## Documentation
