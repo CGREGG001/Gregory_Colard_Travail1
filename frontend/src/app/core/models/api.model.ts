@@ -5,6 +5,7 @@ export interface ApiResponse<T> {
   result: boolean;
   code: string;
   data: T;
+  paramError?: boolean;
 }
 
 export interface User {
