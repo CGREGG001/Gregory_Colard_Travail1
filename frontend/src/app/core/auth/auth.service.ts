@@ -1,7 +1,7 @@
 import { Injectable, signal, inject, computed } from '@angular/core';
 import { tap, map, Observable } from 'rxjs';
 import { AuthResponse, User, ApiResponse, RegisterPayload } from '@core/models/api.model';
-import { ApiService } from '@api/ApiService';
+import { ApiService } from '@api/services';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
