@@ -4,7 +4,6 @@ import { ReactiveFormsModule, FormBuilder, Validators, FormGroup } from '@angula
 import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '@core/auth';
-import { ApiError } from '@core/errors';
 import { ErrorHandlerService } from '@core/errors/error-handler.service';
 import { RegisterPayload } from '@core/models/api.model';
 import { finalize } from 'rxjs';
@@ -69,21 +68,22 @@ export class Register {
       )
       .subscribe({
         next: (response) => {
-          // Ici 'response.data' est automatiquement de type 'User'
-          console.log('Utilisateur créé :', response.data.nickName);
-          this.router.navigate(['/login'], { 
-            queryParams: { registered: 'true', email: payload.email } 
-          });
+          if (response.result === true) {
+            this.router.navigate(['/login'], { 
+              queryParams: { registered: 'true', email: payload.email } 
+            });
+          } else {
+            // L'ApiService a intercepté une erreur (result: false)
+            // On délègue le formatage au ErrorHandlerService !
+            const msg = this.errorHandler.extractMessage(response);            
+            this.errorMessage.set(msg); 
+          }
         },
-        error: (err) => this.handleError(err)
+        error: (err) => {
+          const msg = this.errorHandler.extractMessage(err);
+          this.errorMessage.set(msg);
+        }
       });
-  }
-
-  /**
-   * Helper to display specific error messages based on backend response codes.
-   */
-  private handleError(err: ApiError): void {
-    this.errorMessage.set(this.errorHandler.extractMessage(err));
   }
 
   /**

@@ -19,7 +19,8 @@
       "@core/*": ["./app/core/*"],
       "@shared/*":["./app/shared/*"],
       "@env/*": ["./app/environments/*"],
-      "@features/*": ["./app/features/*"]
+      "@features/*": ["./app/features/*"],
+      "@api/*": ["./app/core/api/*"]
     }
   },
   "angularCompilerOptions": {

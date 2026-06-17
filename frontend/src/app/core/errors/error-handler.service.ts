@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiError } from './api-error.model';
 import { ERROR_MAP } from './api-error-map';
+import { DEFAULT_API_ERROR } from './api-error-default';
 
 @Injectable({ providedIn: 'root' })
 export class ErrorHandlerService {
@@ -14,6 +15,6 @@ export class ErrorHandlerService {
       ''
     );
 
-    return ERROR_MAP[code] ?? 'Une erreur est survenue.';
+    return ERROR_MAP[code] ?? DEFAULT_API_ERROR;
   }
 }

@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
 import { AuthService } from '@core/auth';
+import { DEFAULT_LOGIN_ERROR } from '@core/errors/login-error-default';
 
 @Component({
   selector: 'app-login',
@@ -39,11 +40,10 @@ export class Login {
       next: () => {
         this.isLoading.set(false);
         this.router.navigate(['/dashboard']);
-        console.log('Connexion réussie !');
       },
       error: () => {
         this.isLoading.set(false);
-        this.errorMessage.set('Identifiants invalides ou erreur serveur.');
+        this.errorMessage.set(DEFAULT_LOGIN_ERROR);
       }
     });
   }

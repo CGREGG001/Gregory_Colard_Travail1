@@ -1,13 +1,11 @@
 import { Injectable, signal, inject, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { tap, map, Observable } from 'rxjs';
 import { AuthResponse, User, ApiResponse, RegisterPayload } from '@core/models/api.model';
-import { environment } from '@env/environment';
-
+import { ApiService } from '@api/services';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(HttpClient);
+  private api = inject(ApiService);
   
   // --- In-Memory State ---
   // The access token is ONLY in memory (safe from XSS)
@@ -40,10 +38,7 @@ export class AuthService {
    * Note: 'withCredentials: true' is mandatory to receive/send cookies.
    */
   login(credentials: any): Observable<AuthResponse> {
-    return this.http.post<ApiResponse<AuthResponse>>(
-      `${environment.apiUrl}/auth/signin`, 
-      credentials,
-      { withCredentials: true } 
+    return this.api.post<AuthResponse>(`/auth/signin`, credentials 
     ).pipe(
       map(res => res.data),
       tap(data => {
@@ -59,20 +54,14 @@ export class AuthService {
    * @returns An observable of the API response containing the created User.
    */
   register(payload: RegisterPayload): Observable<ApiResponse<User>> {
-    return this.http.post<ApiResponse<User>>(
-      `${environment.apiUrl}/auth/signup`, 
-      payload
-    );
+    return this.api.post<User>(`/auth/signup`, payload);
   }
 
   /**
    * Request a new access token using the HttpOnly Refresh Cookie.
    */
   refresh(): Observable<AuthResponse> {
-    return this.http.post<ApiResponse<AuthResponse>>(
-      `${environment.apiUrl}/auth/refresh`, 
-      {}, 
-      { withCredentials: true }
+    return this.api.post<AuthResponse>(`/auth/refresh`, {} 
     ).pipe(
       map(res => res.data),
       tap(data => {
@@ -83,7 +72,8 @@ export class AuthService {
   }
 
   logout(): void {
-    this.http.post(`${environment.apiUrl}/auth/logout`, {}, { withCredentials: true }).subscribe();
+    this.api.post(`/auth/logout`, {}).subscribe();
+    
     this._accessToken.set(null);
     this.currentUser.set(null);
   }
