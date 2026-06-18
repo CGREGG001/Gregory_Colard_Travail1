@@ -10,6 +10,7 @@ import {
     RecipeForbiddenActionException,
     RecipeNotFoundException
 } from "@recipe/exceptions";
+import { isNil } from "lodash";
 
 @Injectable()
 export class RecipeService {
@@ -46,8 +47,14 @@ export class RecipeService {
      * @param id - Recipe identifier
      * @returns The recipe if found, otherwise null
      */
-    async findById(id: string): Promise<Recipe | null> {
-        return this.recipeRepository.findOne({ where: { id }, relations: ['author'] });
+    async findByIdOrFail(id: string): Promise<Recipe> {
+        const recipe = await this.recipeRepository.findOne({ where: { id }, relations: ['author'] });
+
+        if (isNil(recipe)) {
+            throw new RecipeNotFoundException();
+        }
+
+        return recipe;
     }
 
     /**
@@ -61,7 +68,7 @@ export class RecipeService {
      * @returns The updated recipe
      */
     async update(id: string, dto: RecipeDto, currentUser: { sub: string; role: string }): Promise<Recipe> {
-        const recipe = await this.findById(id);
+        const recipe = await this.findByIdOrFail(id);
 
         if (!recipe){
             throw new RecipeNotFoundException;
@@ -89,7 +96,7 @@ export class RecipeService {
      */
     async delete(id: string, currentUser: { sub: string; role: string }): Promise<void> {
 
-        const recipe = await this.findById(id);
+        const recipe = await this.findByIdOrFail(id);
 
         if (!recipe) {
             throw new RecipeNotFoundException;
