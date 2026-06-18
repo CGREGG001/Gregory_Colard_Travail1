@@ -1,3 +1,5 @@
+import { RecipeModule } from './modules/recipe/recipe.module';
+import { RecipeController } from './modules/recipe/recipe.controller';
 import { AuthController } from './modules/security/auth.controller';
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
@@ -14,13 +16,15 @@ import { JwtAuthGuard } from '@security/guards';
 
 @Module({
   imports: [
+    RecipeModule,
     TypeOrmModule.forRoot(configManager.getTypeOrmConfig()),
     ConfigModule.forRoot({ isGlobal: true }),
     MemberModule,
     AccountModule,
     SecurityModule
   ],
-  controllers: [AuthController, AppController],
+  controllers: [
+    RecipeController, AuthController, AppController],
   providers: [
     AppService,
     {
