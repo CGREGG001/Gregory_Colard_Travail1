@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Recipe } from '@recipe/entities';
 
 /**
  * DTO used for input/output validation.
@@ -42,4 +43,24 @@ export class RecipeResponseDto {
         description: 'Identifier of the member who authored the recipe',
     })
     authorId?: string;
+
+    /**
+     * Maps a Recipe entity to a RecipeResponseDto.
+     * 
+     * @param recipe - The Recipe entity from the database.
+     * @returns A mapped RecipeResponseDto.
+     */
+    static fromEntity(recipe: Recipe): RecipeResponseDto {
+        const dto = new RecipeResponseDto();
+
+        dto.id = recipe.id;
+        dto.title = recipe.title;
+        dto.description = recipe.description;
+        dto.ingredients = recipe.ingredients;
+        dto.preparationTime = recipe.preparationTime;
+
+        dto.authorId = recipe.author?.id; // FK
+
+        return dto;
+    }
 }
