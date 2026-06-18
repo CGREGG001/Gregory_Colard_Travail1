@@ -8,7 +8,7 @@ import { Member } from "@member/entities";
  * by class-transformer and not via a constructor.
  * This avoids strictPropertyInitialization errors.
  */
-export class MemberDto {
+export class MemberResponseDto {
     @ApiProperty({
         example: '01KQW3E4SQY40KNJ66TER4EB1G',
         description: 'Unique member identifier',
@@ -53,8 +53,8 @@ export class MemberDto {
      * @param member - The Member entity from the database.
      * @returns A mapped MemberDto.
      */
-    static fromEntity(member: Member): MemberDto {
-        const dto = new MemberDto();
+    static fromEntity(member: Member): MemberResponseDto {
+        const dto = new MemberResponseDto();
         
         dto.id = member.id;
         dto.email = member.email;
