@@ -18,7 +18,16 @@ import { JwtAuthGuard } from '@security/guards';
 @Controller('recipe')
 export class RecipeController {
     constructor(private readonly recipeService: RecipeService) {}
-    
+
+    /**
+     * Creates a new recipe associated with the authenticated user.
+     *
+     * Requires a valid Access Token.
+     *
+     * @param dto - Data required to create a recipe
+     * @param user - Authenticated user extracted from JWT (contains the member ID)
+     * @returns The newly created recipe as a response DTO
+     */
     @Post()
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth('access-token')
@@ -36,6 +45,13 @@ export class RecipeController {
         return RecipeResponseDto.fromEntity(recipe);
     }
 
+    /**
+     * Retrieves the list of all recipes.
+     *
+     * Public endpoint — no authentication required.
+     *
+     * @returns An array of recipe response DTOs
+     */
     @Public()
     @Get()
     @ApiOperation(RecipeControllerListDocumentation)
@@ -46,6 +62,15 @@ export class RecipeController {
         return recipes.map(recipe => RecipeResponseDto.fromEntity(recipe));
     }
 
+    /**
+     * Retrieves a single recipe by its ID.
+     *
+     * Public endpoint — no authentication required.
+     *
+     * @param id - Recipe identifier
+     * @returns The recipe as a response DTO
+     * @throws RecipeNotFoundException if the recipe does not exist
+     */
     @Public()
     @Get(':id')
     @HttpCode(HttpStatus.OK)
@@ -56,6 +81,19 @@ export class RecipeController {
         return RecipeResponseDto.fromEntity(recipe);
     }
 
+    /**
+     * Updates a recipe.
+     *
+     * Requires a valid Access Token.
+     * Only the recipe's author or an admin can update it.
+     *
+     * @param id - Recipe identifier
+     * @param dto - Updated recipe data
+     * @param user - Authenticated user performing the update
+     * @returns The updated recipe as a response DTO
+     * @throws RecipeNotFoundException if the recipe does not exist
+     * @throws RecipeForbiddenActionException if the user is not allowed to update the recipe
+     */
     @Put(':id')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth('access-token')
@@ -72,6 +110,17 @@ export class RecipeController {
         return RecipeResponseDto.fromEntity(recipe);
     }
 
+    /**
+     * Deletes a recipe.
+     *
+     * Requires a valid Access Token.
+     * Only the recipe's author or an admin can delete it.
+     *
+     * @param id - Recipe identifier
+     * @param user - Authenticated user performing the deletion
+     * @throws RecipeNotFoundException if the recipe does not exist
+     * @throws RecipeForbiddenActionException if the user is not allowed to delete the recipe
+     */
     @Delete(':id')
     @UseGuards(JwtAuthGuard)
     @ApiBearerAuth('access-token')
