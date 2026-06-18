@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Put, UseGuards } from '@nestjs/common';
 import { MemberService } from '@member/services';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { 
@@ -7,11 +7,13 @@ import {
     MemberControllerListDocumentation,
     MemberControllerUpdateDocumentation 
 } from '@member/member.swagger';
-import { MemberRole } from './enums/member-role.enum';
 import { MemberDto, UpdateMemberAdminDto } from './dtos';
+import { MemberRole } from './enums';
+import { Roles } from '@core/decorators';
 
 @ApiTags('Admin - Members Management')
 @ApiBearerAuth('access-token')
+@Roles(MemberRole.ADMIN)
 @Controller('member')
 export class MemberController {
     constructor(private readonly memberService: MemberService) {}
