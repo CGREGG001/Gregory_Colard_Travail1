@@ -27,7 +27,7 @@ export class AuthController {
     @ApiBody({ type: SignupDto })
     async signup(@Body() signupDto: SignupDto): Promise<MemberDto> {
         const member = await this.authService.signup(signupDto);
-        return new MemberDto(member);
+        return MemberDto.fromEntity(member);
     }
 
     /**
@@ -54,9 +54,9 @@ export class AuthController {
         });
 
         return {
-            user: new MemberDto(member),
+            user: MemberDto.fromEntity(member),
             accessToken
-        };
+        }
     }
 
     /**
