@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { MemberDto } from '@member/dtos';
+import { MemberResponseDto } from '@member/dtos';
 
 /**
  * DTO used for input/output validation.
@@ -9,10 +9,10 @@ import { MemberDto } from '@member/dtos';
  */
 export class SigninResponseDto {
     @ApiProperty({
-        type: MemberDto,
+        type: MemberResponseDto,
         description: 'Authenticated member information',
     })
-    user?: MemberDto;
+    user?: MemberResponseDto;
 
     @ApiProperty({
         example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',

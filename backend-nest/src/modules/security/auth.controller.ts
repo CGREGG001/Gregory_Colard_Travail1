@@ -4,7 +4,7 @@ import { ApiOperation, ApiResponse, ApiBody, ApiTags, ApiBearerAuth } from '@nes
 import type { Response } from 'express';
 
 import { SignupDto, SigninDto, SigninResponseDto } from '@security/dtos';
-import { MemberDto } from '@member/dtos';
+import { MemberResponseDto } from '@member/dtos';
 import { JwtAuthGuard, RefreshTokenGuard } from '@security/guards';
 import { CurrentUser, Public } from '@core/decorators';
 
@@ -23,11 +23,11 @@ export class AuthController {
     @Post('signup')
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation({ summary: 'Register a new member' })
-    @ApiResponse({ status: 201, description: 'Member successfully created', type: MemberDto })
+    @ApiResponse({ status: 201, description: 'Member successfully created', type: MemberResponseDto })
     @ApiBody({ type: SignupDto })
-    async signup(@Body() signupDto: SignupDto): Promise<MemberDto> {
+    async signup(@Body() signupDto: SignupDto): Promise<MemberResponseDto> {
         const member = await this.authService.signup(signupDto);
-        return MemberDto.fromEntity(member);
+        return MemberResponseDto.fromEntity(member);
     }
 
     /**
@@ -54,7 +54,7 @@ export class AuthController {
         });
 
         return {
-            user: MemberDto.fromEntity(member),
+            user: MemberResponseDto.fromEntity(member),
             accessToken
         }
     }

@@ -7,7 +7,7 @@ import {
     MemberControllerListDocumentation,
     MemberControllerUpdateDocumentation 
 } from '@member/member.swagger';
-import { MemberDto, UpdateMemberAdminDto } from './dtos';
+import { MemberResponseDto, UpdateMemberAdminDto } from './dtos';
 import { MemberRole } from './enums';
 import { Roles } from '@core/decorators';
 
@@ -20,31 +20,31 @@ export class MemberController {
 
     @Get()
     @ApiOperation(MemberControllerListDocumentation)
-    @ApiResponse({ status: 200, type: [MemberDto] })
-    async findAll(): Promise<MemberDto[]> {
+    @ApiResponse({ status: 200, type: [MemberResponseDto] })
+    async findAll(): Promise<MemberResponseDto[]> {
         const members = await this.memberService.findAll();
-        return members.map(member => MemberDto.fromEntity(member));
+        return members.map(member => MemberResponseDto.fromEntity(member));
     }
 
     @Get(':id')
     @ApiOperation(MemberControllerDetailsDocumentation)
-    @ApiResponse({ status: 200, type: MemberDto })
-    async findOne(@Param('id') id: string): Promise<MemberDto> {
+    @ApiResponse({ status: 200, type: MemberResponseDto })
+    async findOne(@Param('id') id: string): Promise<MemberResponseDto> {
         const member = await this.memberService.findByIdOrFail(id);
-        return MemberDto.fromEntity(member);
+        return MemberResponseDto.fromEntity(member);
     }
 
     @Put(':id')
     @ApiOperation(MemberControllerUpdateDocumentation)
     @ApiBody({ type: UpdateMemberAdminDto })
     @HttpCode(HttpStatus.OK)
-    @ApiResponse({ status: 200, type: MemberDto })
+    @ApiResponse({ status: 200, type: MemberResponseDto })
     async update(
         @Param('id') id: string,
         @Body() dto: UpdateMemberAdminDto
-    ): Promise<MemberDto> {
+    ): Promise<MemberResponseDto> {
         const updatedMember = await this.memberService.update(id, dto);
-        return MemberDto.fromEntity(updatedMember);
+        return MemberResponseDto.fromEntity(updatedMember);
     }
 
     @Delete(':id')

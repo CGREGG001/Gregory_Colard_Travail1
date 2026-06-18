@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Put } from '@nestjs/common
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MemberService } from '@member/services';
-import { MemberDto, UpdateProfileDto } from '@member/dtos';
+import { MemberResponseDto, UpdateProfileDto } from '@member/dtos';
 import { CurrentUser } from '@core/decorators';
 
 @ApiTags('Account')
@@ -18,19 +18,19 @@ export class AccountController {
      * Requires a valid Access Token.
      *
      * @param user - Authenticated user extracted from JWT
-     * @returns The MemberDto representing the current user
+     * @returns The MemberResponseDto representing the current user
      * @throws NotFoundException If the member does not exist
      */
     @Get('me')
     @ApiOperation({ summary: 'Get current user profile' })
-    @ApiResponse({ status: 200, description: 'Current user details', type: MemberDto })
+    @ApiResponse({ status: 200, description: 'Current user details', type: MemberResponseDto })
     @HttpCode(HttpStatus.OK)
-    async getMe(@CurrentUser() user: { sub: string } ): Promise<MemberDto> {
+    async getMe(@CurrentUser() user: { sub: string } ): Promise<MemberResponseDto> {
         // user.sub comes from JwtAuthGuard
         const member = await this.memberService.findByIdOrFail(user.sub);
         
         // using static mapper from MemberDto
-        return MemberDto.fromEntity(member);
+        return MemberResponseDto.fromEntity(member);
     }
 
     /**
@@ -40,20 +40,20 @@ export class AccountController {
      *
      * @param user - Authenticated user extracted from JWT
      * @param dto - Profile update payload
-     * @returns The updated MemberDto
+     * @returns The updated MemberResponseDto
      */
     @Put('me')
     @ApiOperation({ summary: 'Update current user profile' })
-    @ApiResponse({ status: 200, type: MemberDto })
+    @ApiResponse({ status: 200, type: MemberResponseDto })
     @ApiBody({ type: UpdateProfileDto })
     @HttpCode(HttpStatus.OK)
     async updateMe(
         @CurrentUser() user: { sub: string },
         @Body() dto: UpdateProfileDto
-    ): Promise<MemberDto> {
+    ): Promise<MemberResponseDto> {
         const updatedMember = await this.memberService.update(user.sub, dto);
 
         // using static mapper from MemberDto
-        return MemberDto.fromEntity(updatedMember);
+        return MemberResponseDto.fromEntity(updatedMember);
     }
 }
