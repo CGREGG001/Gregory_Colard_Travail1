@@ -159,7 +159,7 @@ export class AuthService {
      * @throws {ApiException} If the associated credentials cannot be found (404).
      */
     private async generateTokens(member: Member): Promise<{ accessToken: string; refreshToken: string }> {
-        const payload = { sub: member.id, email: member.email };
+        const payload = { sub: member.id, email: member.email, role: member.role };
         
         // Get durations from config service
         const accessExp = this.configService.getOrThrow<JWTDuration>('JWT_ACCESS_TOKEN_EXPIRATION');
