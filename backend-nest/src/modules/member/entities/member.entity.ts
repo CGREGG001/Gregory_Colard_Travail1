@@ -1,18 +1,17 @@
 import { 
     BeforeInsert,
     Column,
-    CreateDateColumn,
-    DeleteDateColumn,
     Entity,
     Index,
+    OneToMany,
     OneToOne,
     PrimaryColumn,
-    UpdateDateColumn
 } from 'typeorm';
 import { ulid } from 'ulid';
 import { Credential } from '@security/entities';
 import { MemberRole } from '@member/enums';
 import { BaseEntity } from '@core/model';
+import { Recipe } from '@recipe/entities';
 
 /**
  * Represents the public profile and metadata of a member.
@@ -57,4 +56,11 @@ export class Member extends BaseEntity {
      */
     @OneToOne(() => Credential, (credential) => credential.member)
     credential!: Credential;
+
+    /**
+     * Relation to the authored recipes.
+     * A member can create multiple recipes, establishing a one‑to‑many link.
+     */
+    @OneToMany(() => Recipe, (recipe) => recipe.author)
+    recipes!: Recipe[];
 }
