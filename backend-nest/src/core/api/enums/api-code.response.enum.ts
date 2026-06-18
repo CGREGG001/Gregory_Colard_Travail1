@@ -19,6 +19,7 @@ export enum ApiCodeResponse {
 
     // Member Errors
     MEMBER_NOT_FOUND = 'api.error.member_not_found',
+    FORBIDDEN_RESOURCE = 'api.error.member_forbidden_ressource',
 
     // Recipe errors
     RECIPE_NOT_FOUND = 'api.error.recipe_not_found',
