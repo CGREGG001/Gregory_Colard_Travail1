@@ -72,7 +72,12 @@ export class RecipeService {
 
         if (!recipe){
             throw new RecipeNotFoundException;
-        } 
+        }
+
+        // Security: if author is null for some reason
+        if (!recipe.author) {
+            throw new RecipeForbiddenActionException();
+        }
 
         // Security: Only the creator or an Admin is allowed to modify it
         if (recipe.author.id !== currentUser.sub && currentUser.role !== MemberRole.ADMIN) {
@@ -100,6 +105,11 @@ export class RecipeService {
 
         if (!recipe) {
             throw new RecipeNotFoundException;
+        }
+
+        // Security: if author is null for some reason
+        if (!recipe.author) {
+            throw new RecipeForbiddenActionException();
         }
 
         // Security: Only the creator or an Admin is allowed to modify it
