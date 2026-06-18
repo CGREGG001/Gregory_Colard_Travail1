@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { RecipeService } from '@recipe/services';
 import { 
@@ -10,25 +10,33 @@ import {
     RecipeControllerUpdateDocumentation
 } from './docs/recipe.swagger';
 import { RecipeDto, RecipeResponseDto } from './dtos';
-import { CurrentUser } from '@core/decorators';
+import { CurrentUser, Public } from '@core/decorators';
 import { Member } from '@member/entities';
-import { RecipeNotFoundException } from './exceptions';
+import { JwtAuthGuard } from '@security/guards';
 
 @ApiTags('Recipes')
-@ApiBearerAuth('access-token')
-@Controller()
+@Controller('recipe')
 export class RecipeController {
     constructor(private readonly recipeService: RecipeService) {}
-
+    
     @Post()
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('access-token')
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation(RecipeControllerCreateDocumentation)
+    @ApiBody({ type: RecipeDto })
     @ApiResponse({ status: 201, description: 'Recipe successfully created', type: RecipeResponseDto })
-    async create(@Body() dto: RecipeDto, @CurrentUser() user: Member): Promise<RecipeResponseDto> {
-        const recipe = await this.recipeService.create(dto, user);
+    async create(
+        @Body() dto: RecipeDto,
+        @CurrentUser() user: { sub: string }
+    ): Promise<RecipeResponseDto> {
+        const author = { id: user.sub } as Member
+        const recipe = await this.recipeService.create(dto, author);
+
         return RecipeResponseDto.fromEntity(recipe);
     }
 
+    @Public()
     @Get()
     @ApiOperation(RecipeControllerListDocumentation)
     @ApiResponse({ status: 200, description: 'List of all recipes', type: [RecipeResponseDto] })
@@ -38,21 +46,22 @@ export class RecipeController {
         return recipes.map(recipe => RecipeResponseDto.fromEntity(recipe));
     }
 
+    @Public()
     @Get(':id')
+    @HttpCode(HttpStatus.OK)
     @ApiOperation(RecipeControllerDetailsDocumentation)
     @ApiResponse({ status: 200, description: 'Recipe details', type: RecipeResponseDto })
     async findOne(@Param('id') id: string): Promise<RecipeResponseDto> {
         const recipe = await this.recipeService.findByIdOrFail(id);
-
-        if (!recipe) {
-            throw new RecipeNotFoundException(); // Utilise ton exception personnalisée
-        }
-    
         return RecipeResponseDto.fromEntity(recipe);
     }
 
     @Put(':id')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('access-token')
+    @HttpCode(HttpStatus.OK)
     @ApiOperation(RecipeControllerUpdateDocumentation)
+    @ApiBody({ type: RecipeDto })
     @ApiResponse({ status: 200, description: 'Recipe successfully updated', type: RecipeResponseDto })
     async update(
         @Param('id') id: string,
@@ -64,6 +73,8 @@ export class RecipeController {
     }
 
     @Delete(':id')
+    @UseGuards(JwtAuthGuard)
+    @ApiBearerAuth('access-token')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation(RecipeControllerDeleteDocumentation)
     @ApiResponse({ status: 204, description: 'Recipe successfully deleted' })
@@ -73,5 +84,4 @@ export class RecipeController {
     ): Promise<void> {
         await this.recipeService.delete(id, user);
     }
-
 }
