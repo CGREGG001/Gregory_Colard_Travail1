@@ -12,7 +12,6 @@ import {
 import { RecipeDto, RecipeResponseDto } from './dtos';
 import { CurrentUser, Public } from '@core/decorators';
 import { Member } from '@member/entities';
-import { JwtAuthGuard } from '@security/guards';
 
 @ApiTags('Recipes')
 @Controller('recipe')
@@ -29,7 +28,6 @@ export class RecipeController {
      * @returns The newly created recipe as a response DTO
      */
     @Post()
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth('access-token')
     @HttpCode(HttpStatus.CREATED)
     @ApiOperation(RecipeControllerCreateDocumentation)
@@ -95,7 +93,6 @@ export class RecipeController {
      * @throws RecipeForbiddenActionException if the user is not allowed to update the recipe
      */
     @Put(':id')
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth('access-token')
     @HttpCode(HttpStatus.OK)
     @ApiOperation(RecipeControllerUpdateDocumentation)
@@ -122,7 +119,6 @@ export class RecipeController {
      * @throws RecipeForbiddenActionException if the user is not allowed to delete the recipe
      */
     @Delete(':id')
-    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth('access-token')
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiOperation(RecipeControllerDeleteDocumentation)
