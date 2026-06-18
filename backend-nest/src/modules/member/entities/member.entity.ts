@@ -12,6 +12,7 @@ import {
 import { ulid } from 'ulid';
 import { Credential } from '@security/entities';
 import { MemberRole } from '@member/enums';
+import { BaseEntity } from '@core/model';
 
 /**
  * Represents the public profile and metadata of a member.
@@ -22,7 +23,7 @@ import { MemberRole } from '@member/enums';
  * TypeORM best practices.
  */
 @Entity('member')
-export class Member {
+export class Member extends BaseEntity {
     @PrimaryColumn({
         type: 'varchar',
         length: 26,
@@ -49,15 +50,6 @@ export class Member {
     // Role of the member for managing permissions.
     @Column({ name: 'member_role', type: 'enum', enum: MemberRole, nullable: false })
     role!: MemberRole;
-
-    @CreateDateColumn({ name: 'created_at' })
-    createdAt!: Date;
-
-    @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt!: Date;
-
-    @DeleteDateColumn({ name: 'deleted_at', select: false })
-    deletedAt!: Date;
 
     /**
      * Relation to the connection identifiers (passwords).

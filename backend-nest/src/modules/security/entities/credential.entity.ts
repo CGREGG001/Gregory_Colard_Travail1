@@ -11,12 +11,13 @@ import {
 } from 'typeorm';
 import { ulid } from 'ulid';
 import { Member } from '@member/entities';
+import { BaseEntity } from '@core/model';
 
 /**
  * Stores sensitive security information (hashed password).
  */
 @Entity('credential')
-export class Credential {
+export class Credential extends BaseEntity {
     @PrimaryColumn({
         type: 'varchar',
         length: 26,
@@ -37,15 +38,6 @@ export class Credential {
      */
     @Column({ name: 'password', select : false })
     password!: string; // hashed password
-
-    @CreateDateColumn({ name: 'created_at' }) // Snake_case for DB
-    createdAt!: Date;
-
-    @UpdateDateColumn({ name: 'updated_at' })
-    updatedAt!: Date;
-
-    @DeleteDateColumn({ name: 'deleted_at', select : false })
-    deletedAt!: Date;
 
     /**
      * Reference to the user who owns this credential.
