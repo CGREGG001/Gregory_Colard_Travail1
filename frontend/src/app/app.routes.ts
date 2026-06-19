@@ -20,7 +20,18 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         canActivate: [authGuard],
-        loadComponent: () => import('@features/dashboard/dashboard').then(m => m.Dashboard)
+        loadComponent: () => import('@features/dashboard/dashboard').then(m => m.Dashboard),
+        children: [
+            {
+                path: 'recipes',
+                loadChildren: () => import('@features/recipe/recipe.routes').then(m => m.recipeRoutes)
+            },
+            {
+                path: '',
+                redirectTo: 'recipes',
+                pathMatch: 'full'
+            }
+        ]
     },
     {
         path: '**',
