@@ -11,7 +11,7 @@ export interface ApiResponse<T> {
 export interface User {
   id: string;
   email: string;
-  nickName: string;
+  nickname: string;
   role: string;
 }
 
