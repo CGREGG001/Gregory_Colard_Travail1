@@ -30,7 +30,11 @@ export const routes: Routes = [
                 path: '',
                 redirectTo: 'recipes',
                 pathMatch: 'full'
-            }
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('@features/account/account').then(m => m.AccountComponent)
+            },
         ]
     },
     {
