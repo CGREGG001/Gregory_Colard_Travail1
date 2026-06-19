@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { MemberRole } from "@member/enums";
+import { Member } from "@member/entities";
 
 /**
  * DTO used for input/output validation.
@@ -7,7 +8,7 @@ import { MemberRole } from "@member/enums";
  * by class-transformer and not via a constructor.
  * This avoids strictPropertyInitialization errors.
  */
-export class MemberDto {
+export class MemberResponseDto {
     @ApiProperty({
         example: '01KQW3E4SQY40KNJ66TER4EB1G',
         description: 'Unique member identifier',
@@ -46,12 +47,22 @@ export class MemberDto {
     })
     updatedAt?: Date;
 
-    constructor(partial: Partial<MemberDto>) {
-        this.id = partial.id;
-        this.email = partial.email;
-        this.nickname = partial.nickname;
-        this.role = partial.role;
-        this.createdAt = partial.createdAt;
-        this.updatedAt = partial.updatedAt;
+    /**
+     * Maps a Member entity to a MemberDto.
+     * 
+     * @param member - The Member entity from the database.
+     * @returns A mapped MemberDto.
+     */
+    static fromEntity(member: Member): MemberResponseDto {
+        const dto = new MemberResponseDto();
+        
+        dto.id = member.id;
+        dto.email = member.email;
+        dto.nickname = member.nickname;
+        dto.role = member.role;
+        dto.createdAt = member.createdAt;
+        dto.updatedAt = member.updatedAt;
+
+        return dto;
     }
 }

@@ -1,46 +1,57 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Put, UseGuards } from '@nestjs/common';
 import { MemberService } from '@member/services';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { 
-    MemberControllerCreateDocumentation,
     MemberControllerDeleteDocumentation,
     MemberControllerDetailsDocumentation,
     MemberControllerListDocumentation,
     MemberControllerUpdateDocumentation 
 } from '@member/member.swagger';
+import { MemberResponseDto, UpdateMemberAdminDto } from './dtos';
+import { MemberRole } from './enums';
+import { Roles } from '@core/decorators';
 
+@ApiTags('Admin - Members Management')
+@ApiBearerAuth('access-token')
+@Roles(MemberRole.ADMIN)
 @Controller('member')
 export class MemberController {
-
     constructor(private readonly memberService: MemberService) {}
 
-    @ApiOperation(MemberControllerCreateDocumentation)
-    @Post()
-    async create(@Body() payload: any) { // Payload à typer plus tard
-        // TODO
-    }
-    
-    @ApiOperation(MemberControllerListDocumentation)
     @Get()
-    async getList() {
-        // TODO
+    @ApiOperation(MemberControllerListDocumentation)
+    @ApiResponse({ status: 200, type: [MemberResponseDto] })
+    async findAll(): Promise<MemberResponseDto[]> {
+        const members = await this.memberService.findAll();
+        return members.map(member => MemberResponseDto.fromEntity(member));
     }
 
-    @ApiOperation(MemberControllerDetailsDocumentation)
     @Get(':id')
-    async getInfo(@Param('id') id: string) {
-        // TODO
+    @ApiOperation(MemberControllerDetailsDocumentation)
+    @ApiResponse({ status: 200, type: MemberResponseDto })
+    async findOne(@Param('id') id: string): Promise<MemberResponseDto> {
+        const member = await this.memberService.findByIdOrFail(id);
+        return MemberResponseDto.fromEntity(member);
     }
 
-    @ApiOperation(MemberControllerUpdateDocumentation)
     @Put(':id')
-    async update(@Param('id') id: string, @Body() payload: any) {
-        // TODO
+    @ApiOperation(MemberControllerUpdateDocumentation)
+    @ApiBody({ type: UpdateMemberAdminDto })
+    @HttpCode(HttpStatus.OK)
+    @ApiResponse({ status: 200, type: MemberResponseDto })
+    async update(
+        @Param('id') id: string,
+        @Body() dto: UpdateMemberAdminDto
+    ): Promise<MemberResponseDto> {
+        const updatedMember = await this.memberService.update(id, dto);
+        return MemberResponseDto.fromEntity(updatedMember);
     }
 
-    @ApiOperation(MemberControllerDeleteDocumentation)
     @Delete(':id')
-    async remove(@Param('id') id: string) {
-        // TODO
+    @ApiOperation(MemberControllerDeleteDocumentation)
+    @HttpCode(HttpStatus.NO_CONTENT)
+    @ApiResponse({ status: 204 })
+    async remove(@Param('id') id: string): Promise<void> {
+        await this.memberService.softDelete(id);
     }
 }

@@ -13,19 +13,30 @@
 </p>
 
 
-# **NestJS API (Security, Auth, Docker, Migrations)**
+# **NestJS API - Auth, RBAC, Members & Recipes**
 *Dans le cadre du cours de web | Bachelier Informatique en Developpemnt d'Application | IPEFA Sup Seraing 2025/2026*
 
 ## **Présentation générale**
 
-Ce projet est une API NestJS modulaire, utilisant :
+Cette API NestJS fournit une architecture modulaire, sécurisée, documentée et scalable, intégrant :
 
-- TypeORM + PostgreSQL  
-- JWT Access & Refresh Tokens  
-- Refresh Token Rotation  
-- Swagger pour la documentation  
-- Docker pour l’environnement de développement  
-- Scripts de migration TypeORM
+- TypeORM + PostgreSQL
+- JWT Access & Refresh Tokens
+- Refresh Token Rotation
+- RBAC (Role-Based Access Control)
+- Swagger (OpenAPI 3)
+- Docker pour le développement
+- Migrations TypeORM
+- Modules complets : Security, Member, Account, Recipe
+
+Cette version v0.4.0 introduit notamment :
+
+- Le module Recipe complet (CRUD, permissions, DTOs, Swagger)
+- Le système RBAC avec @Roles() + RolesGuard global
+- Le refactor complet du module Member
+- L’ajout de MemberResponseDto et des mappers
+- L’intégration des rôles dans le payload JW
+- Une structure de projet finalisée et propre
 
 L’objectif est de fournir une base solide, extensible, sécurisée et documentée pour construire une application backend moderne.
 
@@ -33,22 +44,60 @@ L’objectif est de fournir une base solide, extensible, sécurisée et document
 
 ## **Sécurité & Authentification**
 
-Le module Security implémente :
+Le module Security inclut :
 
-- **JWT Access Token** (15 minutes)
-- **JWT Refresh Token** (7 jours)
-- **Refresh Token Rotation**  
-- Stratégies Passport dédiées :
+- JWT :
+  - **JWT Access Token** (15 minutes)
+  - **JWT Refresh Token** (7 jours)
+  - **Refresh Token Rotation**  
+- Stratégies :
   - **JwtStrategy** (access)
   - **JwtRefreshStrategy** (refresh)
 - Guards :
   - **JwtAuthGuard**
   - **RefreshTokenGuard**
+- RBAC :
+  - **Décorateur @Roles(...)**
+  - **Enum MemberRole**
+  - **Protection automatique des routes sensibles**
 
-Swagger expose deux schémas Bearer distincts :
+- Swagger expose deux schémas Bearer :
+  - **access-token**
+  - **refresh-token**
 
-- `access-token`  
-- `refresh-token`
+---
+
+## Modules principaux
+
+### Security
+
+- Authentification complète
+- Gestion des tokens
+- Credentials + Token Hashing
+- RBAC global
+
+### Member
+
+- CRUD admin complet
+- Soft delete
+- Mise à jour du profil
+- DTOs request/response
+- Mappers intégrés
+- Endpoints sécurisés par rôle
+
+### Account
+
+- Endpoint /account/me
+- Mise à jour du profil utilisateur connecté
+
+### Recipe
+
+- CRUD complet
+- Validation DTO
+- Permissions (auteur/admin)
+- Exceptions dédiées
+- Swagger complet
+- Relation Member → Recipe
 
 ---
 
@@ -138,17 +187,11 @@ Ce script :
 - lance l’API NestJS en mode watch
 - expose Swagger sur `http://localhost:3002/docs`
 
-⚠️ **Les migrations ne sont pas exécutées automatiquement.**
+⚠️ **Les migrations doivent être exécutées manuellement.**
 
 ---
 
 ## **Migrations TypeORM**
-
-### Générer une migration
-
-```
-npm run migration:generate -- src/migrations/<nom>
-```
 
 ### Exécuter les migrations
 
@@ -162,32 +205,37 @@ npm run migration:run
 
 Swagger :
 
-```
 http://localhost:3002/docs
+
+
+### Générer une migration
+
 ```
+npm run migration:generate -- src/migrations/<nom>
+```
+
 
 ---
 
 ## **Endpoints principaux**
 
 | Méthode | Endpoint | Description | Auth |
-|---------|----------|-------------|------|
-|POST|/auth/signup | Inscription d'un membre | Public |
-|POST|/auth/signin | Connexion (retourne 2 tokens) | Public |
-|POST|/auth/refresh | Rotation des tokens | Refresh Token |
-|GET|/account/status | Vérifie la session actuelle | Access Token |
+| --- | --- | --- | --- |
+| POST | /auth/signup | Inscription | Public |
+| POST | /auth/signin | Connexion (2 tokens) | Public |
+| POST | /auth/refresh | Rotation tokens | Refresh Token |
+| GET | /account/me | Profil utilisateur | Access Token |
+| GET | /member | CRUD admin | Admin |
+| GET | /recipe | CRUD recettes | Access Token |
 
 ---
 
 ## **Tester l’authentification dans Swagger**
 
-1. Appeler `/auth/signin`  
-2. Copier `accessToken` et `refreshToken`  
-3. Cliquer sur **Authorize**  
-   - `access-token` → access token  
-   - `refresh-token` → refresh token  
-4. Tester `/account/status`  
-5. Tester `/auth/refresh`
+1. Signin
+2. Copier accessToken + refreshToken
+3. Authorize
+4. Tester les endpoints sécurisés
 
 ---
 
@@ -195,22 +243,15 @@ http://localhost:3002/docs
 
 ```
 src/
-│
+├── core/
 ├── modules/
 │   ├── security/
-│   │   ├── controllers/
-│   │   ├── strategies/
-│   │   ├── guards/
-│   │   ├── services/
-│   │   └── security.module.ts
 │   ├── member/
-│   └── ...
-│
-├── core/
-│   ├── config/
-│   └── ...
-├── main.ts
-└── app.module.ts
+│   ├── account/
+│   └── recipe/
+├── migrations/
+└── main.ts
+
 ```
 
 ---
@@ -224,6 +265,7 @@ src/
 | `migration:run` | Exécute les migrations |
 
 ---
+
 ## Restons en contact
 
 - Auteur - [Gregory Colard](https://github.com/CGREGG001)

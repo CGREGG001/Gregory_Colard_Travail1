@@ -9,6 +9,8 @@ import {
 } from '@member/exceptions/member.exceptions';
 import { MemberRole } from '@member/enums';
 import { ApiCodeResponse } from '@core/api';
+import { isNil } from 'lodash';
+import { UpdateMemberAdminDto, UpdateProfileDto } from '@member/dtos/requests';
 
 @Injectable()
 export class MemberService {
@@ -73,7 +75,7 @@ export class MemberService {
     async findByIdOrFail(id: string): Promise<Member> {
         const member = await this.memberRepository.findOne({ where: { id } });
         
-        if (!member) {
+        if (isNil(member)) {
             throw new NotFoundException(ApiCodeResponse.MEMBER_NOT_FOUND); 
         }
         
@@ -94,37 +96,63 @@ export class MemberService {
     async findById(id: string): Promise<Member | null> {
         const member = await this.memberRepository.findOne({ where: { id } });
         
-        if (!member){
+        if (isNil(member)){
             return null;
         }
         return member;
     }
 
     /**
-     * getMember
+     * Retrieves all members from the database (for Admin use).
      */
-    public getMemberInfo(): void {
-        // TODO
+    async findAll(): Promise<Member[]> {
+        return this.memberRepository.find();
     }
 
     /**
-     * getMembers
+     * Updates a member's profile (supports self-update and admin-update).
+     * 
+     * @param id - Member identifier
+     * @param dto - Partial data to update
      */
-    public getMemberList(): void {
-        // TODO
+    async update(id: string, dto: UpdateProfileDto | UpdateMemberAdminDto): Promise<Member> {
+        const member = await this.findByIdOrFail(id);
+
+        // Check unbicity if email is deleted
+        if (dto.email && dto.email.toLowerCase() !== member.email) {
+            const normalizedEmail = dto.email.toLowerCase();
+            const existing = await this.findByEmail(normalizedEmail);
+            if (existing) {
+                throw new EmailAlreadyExistException();
+            }
+            member.email = normalizedEmail;
+        }
+
+        // If nickname is modified, check unicity
+        if (dto.nickname && dto.nickname !== member.nickname) {
+            const existing = await this.memberRepository.findOne({ where: { nickname: dto.nickname } });
+            if (existing) {
+                throw new NicknameAlreadyExistException();
+            }
+            member.nickname = dto.nickname;
+        }
+
+        // If role is given
+        if ('role' in dto && dto.role) {
+            member.role = dto.role;
+        }
+
+        return this.memberRepository.save(member);
     }
 
     /**
-     * updateMember
+     * Performs a soft delete (suppression logique) on a member.
+     * 
+     * @param id - Member identifier
      */
-    public updateMember(): void {
-        // TODO '';
-    }
-
-    /**
-     * deleteMember
-     */
-    public removeMember(): void {
-        // TODO
+    async softDelete(id: string): Promise<void> {
+        const member = await this.findByIdOrFail(id);
+        // softRemove fills automatically 'deleted_at'
+        await this.memberRepository.softRemove(member); 
     }
 }
