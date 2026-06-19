@@ -1,41 +1,54 @@
 <div class="dashboard-layout">
-  <!-- Sidebar -->
+  
+  <!-- Sidebar Gauche -->
   <aside class="sidebar">
-    <div class="logo">
-      Maison<span>Recette</span>
-    </div>
-
-    <nav class="menu">
-      <a routerLink="/dashboard/recipes" routerLinkActive="active">Recettes</a>
-      <a routerLink="/dashboard/members" routerLinkActive="active">Mes infos</a>
+    <div class="logo">Maison<span>Recette</span></div>
+    
+    <nav class="nav-menu">
+      <!-- RouterLinkActive applique la classe .active si on est sur la route -->
+      <a routerLink="recipes" routerLinkActive="active" class="nav-item">
+        <span class="icon"></span> Recettes
+      </a>
+      <a routerLink="members" routerLinkActive="active" class="nav-item">
+        <span class="icon"></span> Membres
+      </a>
     </nav>
 
-    <button (click)="onLogout()" class="logout-btn">Déconnexion</button>
+    <div class="sidebar-footer">
+      <button (click)="onLogout()" class="btn-logout">
+        <span class="icon"></span> Déconnexion
+      </button>
+    </div>
   </aside>
 
-  <!-- Main Content -->
-  <main class="content">
-    <header class="content-header">
-      <h1>Tableau de bord</h1>
-      <button class="btn-primary" (click)="addRecipe()">+ Ajouter Recette</button>
+  <!-- Zone de Contenu Principale -->
+  <div class="main-wrapper">
+    
+    <!-- Header Supérieur -->
+    <header class="main-header">
+      <div class="page-title">
+        <!-- Titre dynamique ou informatif -->
+        <span>Espace Personnel</span>
+      </div>
+
+      @if (authService.currentUser(); as user) {
+        <div class="user-profile">
+          <div class="user-avatar">
+            {{ user?.nickname?.slice(0, 2)?.toUpperCase() }}
+          </div>
+          <div class="user-info">
+            <span class="nickname">{{ user?.nickname }}</span>
+            <span class="role">{{ user?.role }}</span>
+          </div>
+        </div>
+      }
+
     </header>
 
-    <section class="recipes-grid">
-      @for (recipe of recipes(); track recipe.id) {
-        <article class="recipe-card">
-          <div class="card-img-placeholder"></div>
+    <!-- Le Router Outlet où s'injecteront les Recettes ! -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
 
-          <div class="card-body">
-            <h3>{{ recipe.title }}</h3>
-            <p>{{ recipe.description }}</p>
-
-            <div class="actions">
-              <button (click)="editRecipe(recipe.id)">✏️</button>
-              <button (click)="deleteRecipe(recipe.id)" class="delete">🗑️</button>
-            </div>
-          </div>
-        </article>
-      }
-    </section>
-  </main>
+  </div>
 </div>
