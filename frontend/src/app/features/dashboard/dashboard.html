@@ -9,9 +9,16 @@
       <a routerLink="recipes" routerLinkActive="active" class="nav-item">
         <span class="icon"></span> Recettes
       </a>
-      <a routerLink="members" routerLinkActive="active" class="nav-item">
-        <span class="icon"></span> Membres
-      </a>
+      @if (authService.currentUser()?.role === 'user') {
+        <a routerLink="profile" routerLinkActive="active" class="nav-item">
+          <span class="icon"></span> Mon Profil
+        </a>
+      }
+      @if (authService.currentUser()?.role === 'admin') {
+        <a routerLink="members" routerLinkActive="active" class="nav-item">
+          <span class="icon"></span> Membres
+        </a>
+      }
     </nav>
 
     <div class="sidebar-footer">
