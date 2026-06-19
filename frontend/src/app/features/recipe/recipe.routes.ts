@@ -9,4 +9,8 @@ export const recipeRoutes: Routes = [
         path: 'create',
         loadComponent: () => import('./page/recipe-form/recipe-form').then(m => m.RecipeForm)
     },
+    {
+        path: 'detail/:id', // Correspond au @Input() id!: string;
+        loadComponent: () => import('./page/recipe-detail/recipe-detail').then(m => m.RecipeDetail)
+    },
 ];
