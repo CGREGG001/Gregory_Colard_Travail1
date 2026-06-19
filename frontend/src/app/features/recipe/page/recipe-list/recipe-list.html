@@ -1,0 +1,41 @@
+<div class="recipes-container">
+  <div class="header-actions">
+    <h2>Nos Recettes</h2>
+    <button class="btn-primary" routerLink="create">+ Ajouter une recette</button>
+  </div>
+
+  <div class="recipes-grid">
+    @for (recipe of recipeService.recipes(); track recipe.id) {
+      <div class="recipe-card">
+        <div class="card-img-placeholder">
+          <span class="time-badge">⏱️ {{ recipe.preparationTime }} min</span>
+        </div>
+        <div class="card-body">
+          <h3>{{ recipe.title }}</h3>
+          <p>{{ recipe.description }}</p>
+          
+          <div class="ingredients-preview">
+            @for (ing of recipe.ingredients.slice(0, 3); track ing) {
+              <span class="ing-tag">{{ ing }}</span>
+            }
+            @if (recipe.ingredients.length > 3) {
+              <span class="ing-tag more">+{{ recipe.ingredients.length - 3 }}</span>
+            }
+          </div>
+
+          <!-- Security (Only author or admin can modify/delete) -->
+          @if (recipe.authorId === authService.currentUser()?.id || authService.currentUser()?.role === 'admin') {
+            <div class="card-actions">
+              <button [routerLink]="['edit', recipe.id]" class="btn-icon">✏️ Modifier</button>
+              <button (click)="onDelete(recipe.id)" class="btn-icon delete">🗑️ Supprimer</button>
+            </div>
+          }
+        </div>
+      </div>
+    } @empty {
+      <div class="empty-state">
+        <p>Aucune recette de disponible pour le moment. Soyez le premier à en ajouter une !</p>
+      </div>
+    }
+  </div>
+</div>
