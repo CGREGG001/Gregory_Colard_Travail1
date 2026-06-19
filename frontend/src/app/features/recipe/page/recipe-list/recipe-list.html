@@ -6,7 +6,7 @@
 
   <div class="recipes-grid">
     @for (recipe of recipeService.recipes(); track recipe.id) {
-      <div class="recipe-card">
+      <div class="recipe-card" [routerLink]="['detail', recipe.id]">
         <div class="card-img-placeholder">
           <span class="time-badge">⏱️ {{ recipe.preparationTime }} min</span>
         </div>
@@ -25,7 +25,7 @@
 
           <!-- Security (Only author or admin can modify/delete) -->
           @if (recipe.authorId === authService.currentUser()?.id || authService.currentUser()?.role === 'admin') {
-            <div class="card-actions">
+            <div class="card-actions" (click)="$event.stopPropagation()">
               <button [routerLink]="['edit', recipe.id]" class="btn-icon">✏️ Modifier</button>
               <button (click)="onDelete(recipe.id)" class="btn-icon delete">🗑️ Supprimer</button>
             </div>
