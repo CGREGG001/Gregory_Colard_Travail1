@@ -1,0 +1,143 @@
+@use 'variables' as *;
+
+.detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+
+    .btn-back {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: $color-text-main;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: $transition-smooth;
+
+      &:hover { 
+        background: rgba(255, 255, 255, 0.1);
+        border-color: $color-accent-cream;
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+
+      button {
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: $transition-smooth;
+        border: 1px solid transparent;
+
+        &.btn-secondary {
+          background: rgba(255, 255, 255, 0.05);
+          color: white;
+          border-color: rgba(255, 255, 255, 0.1);
+          &:hover { background: rgba(255, 255, 255, 0.1); }
+        }
+
+        &.btn-danger {
+          background: rgba(255, 82, 82, 0.1);
+          color: #ff5252;
+          border-color: rgba(255, 82, 82, 0.2);
+          &:hover { background: rgba(255, 82, 82, 0.2); }
+        }
+      }
+    }
+  }
+
+  .loading-state, .error-state {
+    text-align: center;
+    padding: 80px;
+    background: $color-surface;
+    border-radius: 24px;
+    color: $color-text-muted;
+  }
+
+  .glass-card.recipe-content {
+    background: $color-surface;
+    backdrop-filter: $glass-blur;
+    border: $glass-border;
+    border-radius: 32px;
+    overflow: hidden;
+
+    .recipe-banner {
+      height: 250px;
+      background: linear-gradient(135deg, rgba($color-accent-purple, 0.6), rgba($color-bg-dark, 0.8)),
+                  url('/assets/images/background-auth.jpg') center/cover; // On réutilise l'image globale
+    }
+
+    .recipe-header {
+      padding: 40px 40px 0;
+      
+      h1 { font-size: 2.5rem; margin-bottom: 16px; font-weight: 800; color: white; }
+      
+      .meta-info {
+        display: flex;
+        gap: 16px;
+        
+        .badge {
+          background: rgba(255, 255, 255, 0.05);
+          padding: 6px 12px;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          color: $color-text-muted;
+          
+          &.time { color: $color-accent-cream; background: rgba($color-accent-cream, 0.1); }
+        }
+      }
+    }
+
+    .recipe-body {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      padding: 40px;
+
+      @media (min-width: 768px) {
+        flex-direction: row; // On passe en 2 colonnes sur grand écran
+      }
+
+      h2 { font-size: 1.2rem; margin-bottom: 20px; color: $color-accent-cream; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;}
+
+      .ingredients-box {
+        flex: 1;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 24px;
+        border-radius: 16px;
+
+        ul {
+          list-style: none;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+
+          li { color: white; display: flex; align-items: center; gap: 8px; }
+          .bullet { color: $color-accent-cream; font-size: 1.2rem; }
+          .empty { color: $color-text-muted; font-style: italic; }
+        }
+      }
+
+      .description-box {
+        flex: 2;
+        
+        .description-text {
+          color: $color-text-muted;
+          line-height: 1.8;
+          white-space: pre-wrap; // Préserve les sauts de ligne tapés dans le textarea
+          font-size: 1.05rem;
+        }
+      }
+    }
+  }
+}
