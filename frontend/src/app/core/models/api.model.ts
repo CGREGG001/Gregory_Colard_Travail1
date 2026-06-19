@@ -20,7 +20,6 @@ export interface User {
  * The refresh token is received and handled automatically via HttpOnly Cookie.
  */
 export interface AuthResponse {
-  user: User;
   accessToken: string;
 }
 
