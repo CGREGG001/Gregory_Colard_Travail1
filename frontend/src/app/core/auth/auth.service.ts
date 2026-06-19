@@ -1,11 +1,14 @@
 import { Injectable, signal, inject, computed, effect } from '@angular/core';
 import { tap, map, Observable } from 'rxjs';
+
 import { AuthResponse, User, ApiResponse, RegisterPayload } from '@core/models/api.model';
 import { ApiService } from '@api/services';
+import { AccountService } from '@core/account/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private api = inject(ApiService);
+  private accountService = inject(AccountService);
   
   // --- In-Memory State ---
   private _accessToken = signal<string | null>(null);
@@ -20,9 +23,7 @@ export class AuthService {
     const at = this._accessToken()
 
     if (at){
-      this.api.get<User>('/account/me').pipe(
-        map(res => res.data)
-      ).subscribe({
+      this.accountService.getMe().subscribe({
         next: (data) => {
           this.currentUser.set(data);
         },
