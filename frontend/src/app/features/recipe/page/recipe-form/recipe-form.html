@@ -1,0 +1,68 @@
+<div class="form-container">
+  <div class="header">
+    <button class="btn-back" routerLink="/dashboard/recipes">← Retour</button>
+    <h2>Nouvelle Recette</h2>
+  </div>
+
+  <div class="glass-card">
+    <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Titre -->
+      <div class="input-group">
+        <label for="title">Titre de la recette</label>
+        <input type="text" id="title" formControlName="title" placeholder="Ex: Tarte aux figues">
+      </div>
+
+      <!-- Temps de préparation -->
+      <div class="input-group">
+        <label for="prepTime">Temps de préparation (minutes)</label>
+        <input type="number" id="prepTime" formControlName="preparationTime" min="1">
+      </div>
+
+      <!-- Description -->
+      <div class="input-group">
+        <label for="desc">Description</label>
+        <textarea id="desc" formControlName="description" rows="4" placeholder="Étapes de préparation..."></textarea>
+      </div>
+
+      <!-- Ingrédients Dynamiques -->
+      <div class="ingredients-section">
+        <label>Ingrédients</label>
+        
+        <div class="ingredient-adder">
+          <input 
+            type="text" 
+            [formControl]="newIngredientControl" 
+            (keydown)="onIngredientKeydown($event)"
+            placeholder="Ajouter un ingrédient (ex: 200g de farine)"
+          >
+          <button type="button" (click)="addIngredient()" class="btn-secondary">Ajouter</button>
+        </div>
+
+        <ul class="ingredients-list">
+          @for (control of ingredientsArray.controls; track $index) {
+            <li>
+              {{ control.value }}
+              <button type="button" (click)="removeIngredient($index)" class="btn-remove">×</button>
+            </li>
+          } @empty {
+            <li class="empty-state">Aucun ingrédient ajouté.</li>
+          }
+        </ul>
+      </div>
+
+      <!-- Affichage d'erreur -->
+      @if (errorMessage()) {
+        <div class="error-msg">{{ errorMessage() }}</div>
+      }
+
+      <!-- Bouton de validation -->
+      <div class="actions">
+        <button type="submit" [disabled]="recipeForm.invalid || isLoading()" class="btn-primary">
+          {{ isLoading() ? 'Enregistrement...' : 'Créer la recette' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
