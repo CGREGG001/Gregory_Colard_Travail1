@@ -1,0 +1,64 @@
+<div class="detail-container">
+  
+  <div class="header">
+    <button class="btn-back" routerLink="/dashboard/members">← Retour à la liste</button>
+    <h2>Fiche Membre</h2>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">Chargement des données...</div>
+  } @else if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  } @else if (member(); as m) {
+    
+    <div class="glass-card profile-card">
+      <div class="user-avatar-large">
+        {{ m.nickname.slice(0, 2).toUpperCase() }}
+      </div>
+      
+      <div class="info-grid">
+        <div class="info-item">
+          <label>Identifiant (ID)</label>
+          <span class="mono">{{ m.id }}</span>
+        </div>
+        <div class="info-item">
+          <label>Pseudo</label>
+          <span>{{ m.nickname }}</span>
+        </div>
+        <div class="info-item">
+          <label>Adresse Email</label>
+          <span>{{ m.email }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panneau d'Administration -->
+    <div class="glass-card admin-panel">
+      <h3>Administration des Droits</h3>
+      
+      <form [formGroup]="adminForm" (ngSubmit)="onUpdateRole()" class="role-form">
+        <div class="input-group">
+          <label for="role">Modifier le rôle</label>
+          <select id="role" formControlName="role">
+            <option value="user">Membre Standard (USER)</option>
+            <option value="admin">Administrateur (ADMIN)</option>
+          </select>
+        </div>
+
+        <button type="submit" [disabled]="adminForm.invalid || isSaving() || adminForm.value.role === m.role" class="btn-primary">
+          {{ isSaving() ? 'Sauvegarde...' : 'Appliquer le rôle' }}
+        </button>
+      </form>
+
+      @if (successMessage()) { <div class="success-msg">{{ successMessage() }}</div> }
+    </div>
+
+    <!-- Zone de Danger -->
+    <div class="glass-card danger-zone">
+      <h3>Zone de Danger</h3>
+      <p>Bannir ce membre entraînera la désactivation immédiate de son compte (Soft Delete).</p>
+      <button (click)="onBan()" class="btn-danger">Bannir le membre</button>
+    </div>
+
+  }
+</div>
