@@ -11,7 +11,7 @@ export interface ApiResponse<T> {
 export interface User {
   id: string;
   email: string;
-  nickName: string;
+  nickname: string;
   role: string;
 }
 
@@ -20,7 +20,6 @@ export interface User {
  * The refresh token is received and handled automatically via HttpOnly Cookie.
  */
 export interface AuthResponse {
-  user: User;
   accessToken: string;
 }
 

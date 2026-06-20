@@ -1,0 +1,30 @@
+<div class="form-container">
+  <div class="header">
+    <h2>Mon Profil</h2>
+  </div>
+
+  <div class="glass-card">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      
+      <div class="input-group">
+        <label for="nickname">Pseudo</label>
+        <input type="text" id="nickname" formControlName="nickname">
+      </div>
+
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email">
+      </div>
+
+      @if (successMessage()) { <div class="success-msg">{{ successMessage() }}</div> }
+      @if (errorMessage()) { <div class="error-msg">{{ errorMessage() }}</div> }
+
+      <div class="actions">
+        <button type="submit" [disabled]="profileForm.invalid || isLoading()" class="btn-primary">
+          {{ isLoading() ? 'Enregistrement...' : 'Mettre à jour' }}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

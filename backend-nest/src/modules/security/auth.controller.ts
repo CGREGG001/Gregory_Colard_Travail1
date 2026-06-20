@@ -44,7 +44,7 @@ export class AuthController {
     @ApiResponse({ status: 401, description: 'Invalid credentials' })
     @ApiBody({ type: SigninDto })
     async signin(@Body() signinDto: SigninDto, @Res({ passthrough: true }) response: Response): Promise<SigninResponseDto> {
-        const { member, accessToken, refreshToken } = await this.authService.signin(signinDto);
+        const { accessToken, refreshToken } = await this.authService.signin(signinDto);
 
         response.cookie('refresh_token', refreshToken, {
             httpOnly: true,
@@ -54,7 +54,6 @@ export class AuthController {
         });
 
         return {
-            user: MemberResponseDto.fromEntity(member),
             accessToken
         }
     }
@@ -83,7 +82,8 @@ export class AuthController {
             sameSite: 'lax',
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
         })
-        return this.authService.refreshTokens(user.sub, user.refreshToken);
+
+        return { accessToken };
     }
 
     /**

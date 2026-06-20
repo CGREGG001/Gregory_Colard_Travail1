@@ -1,0 +1,130 @@
+@use 'variables' as *;
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+
+    .btn-back {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: $color-text-main;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: $transition-smooth;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: $color-accent-cream;
+      }
+    }
+  }
+
+  .glass-card {
+    background: $color-surface;
+    backdrop-filter: $glass-blur;
+    border: $glass-border;
+    border-radius: 24px;
+    padding: 40px;
+
+    .input-group {
+      margin-bottom: 24px;
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: $color-text-muted;
+        font-size: 0.9rem;
+      }
+
+      input, textarea {
+        width: 100%;
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        color: white;
+        transition: $transition-smooth;
+        font-family: inherit;
+
+        &:focus {
+          outline: none;
+          border-color: $color-accent-cream;
+          background: rgba(255, 255, 255, 0.07);
+        }
+      }
+    }
+
+    .ingredients-section {
+      margin-bottom: 32px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+      label { display: block; margin-bottom: 12px; color: $color-text-muted; }
+
+      .ingredient-adder {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 16px;
+
+        input { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(0,0,0,0.2); color: white; }
+        .btn-secondary { padding: 0 20px; border-radius: 8px; border: 1px solid $color-accent-cream; background: transparent; color: $color-accent-cream; cursor: pointer; transition: $transition-smooth; &:hover { background: rgba(243, 229, 171, 0.1); } }
+      }
+
+      .ingredients-list {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        li {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px 16px;
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 8px;
+          font-size: 0.95rem;
+
+          .btn-remove { background: transparent; border: none; color: #ff5252; cursor: pointer; font-size: 1.2rem; font-weight: bold; &:hover { color: #ff7373; } }
+        }
+        .empty-state { color: rgba(255, 255, 255, 0.3); font-style: italic; background: transparent; padding: 0; }
+      }
+    }
+
+    .error-msg {
+      background: rgba(255, 82, 82, 0.1);
+      color: #ff5252;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      
+      .btn-primary {
+        padding: 14px 32px;
+        background: $color-accent-cream;
+        color: black;
+        border: none;
+        border-radius: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: $transition-smooth;
+
+        &:disabled { opacity: 0.5; cursor: not-allowed; }
+        &:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(243, 229, 171, 0.2); }
+      }
+    }
+  }
+}

@@ -1,17 +1,41 @@
-import { Injectable, signal, inject, computed } from '@angular/core';
+import { Injectable, signal, inject, computed, effect } from '@angular/core';
 import { tap, map, Observable } from 'rxjs';
+
 import { AuthResponse, User, ApiResponse, RegisterPayload } from '@core/models/api.model';
 import { ApiService } from '@api/services';
+import { AccountService } from '@core/account/account.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private api = inject(ApiService);
+  private accountService = inject(AccountService);
   
   // --- In-Memory State ---
-  // The access token is ONLY in memory (safe from XSS)
   private _accessToken = signal<string | null>(null);
-
   currentUser = signal<User | null>(null);
+
+  /**
+   * Reactive Effect: Automatically fetches the user profile whenever 
+   * the access token is successfully updated.
+   * If the token is cleared (logout), it clears the current user.
+   */
+  private _accessTokenEffect = effect(() => { 
+    const at = this._accessToken()
+
+    if (at){
+      this.accountService.getMe().subscribe({
+        next: (data) => {
+          this.currentUser.set(data);
+        },
+        error: (err) => {
+          console.error('Failed to fetch user profile', err);
+          this.logout(); 
+        }
+      });
+    } else {
+      this.currentUser.set(null);
+    }
+  })
 
   /**
    * Indicates whether the user is currently authenticated.
@@ -41,9 +65,9 @@ export class AuthService {
     return this.api.post<AuthResponse>(`/auth/signin`, credentials 
     ).pipe(
       map(res => res.data),
-      tap(data => {
+      tap(data => {      
         this._accessToken.set(data.accessToken);
-        this.currentUser.set(data.user);
+        // this.currentUser.set(data.user);
       })
     );
   }
@@ -65,8 +89,8 @@ export class AuthService {
     ).pipe(
       map(res => res.data),
       tap(data => {
+        console.log('CHOUOUOUOU', data);
         this._accessToken.set(data.accessToken);
-        this.currentUser.set(data.user);
       })
     );
   }
