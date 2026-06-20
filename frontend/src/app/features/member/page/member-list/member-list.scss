@@ -1,0 +1,102 @@
+@use 'variables' as *;
+
+.admin-container {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .header {
+    margin-bottom: 32px;
+    h2 { font-size: 2rem; font-weight: 700; color: white; margin-bottom: 8px; }
+    .subtitle { color: $color-text-muted; }
+  }
+
+  .glass-table-wrapper {
+    background: $color-surface;
+    backdrop-filter: $glass-blur;
+    border: $glass-border;
+    border-radius: 20px;
+    overflow: hidden; // Arrondit les coins du tableau
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+
+      th {
+        padding: 16px 24px;
+        background: rgba(0, 0, 0, 0.3);
+        color: $color-text-muted;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      td {
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: white;
+        vertical-align: middle;
+
+        &.id-cell {
+          font-family: monospace;
+          color: $color-text-muted;
+          font-size: 0.9rem;
+        }
+
+        &.actions-cell {
+          display: flex;
+          justify-content: flex-end;
+          gap: 12px;
+        }
+      }
+
+      tr:last-child td { border-bottom: none; }
+      
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+
+      .text-right { text-align: right; }
+
+      .role-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.1);
+        color: $color-text-main;
+
+        &.admin {
+          background: rgba($color-accent-cream, 0.2);
+          color: $color-accent-cream;
+        }
+      }
+
+      .btn-icon {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: $transition-smooth;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          border-color: $color-accent-cream;
+        }
+      }
+    }
+  }
+
+  .loading, .error-msg, .empty-state {
+    text-align: center;
+    padding: 60px;
+    color: $color-text-muted;
+  }
+}

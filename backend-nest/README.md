@@ -151,6 +151,7 @@ Puis remplir les valeurs :
 ```
 # API
 API_PORT=3002
+APP_BASE_URL=/api
 
 # DATABASE
 DB_TYPE=postgres
@@ -164,7 +165,7 @@ DB_DATABASE=BidaNest
 BCRYPT_SALT_ROUNDS=12
 
 # JWT SECRET
-JWT_SECRET=supersecretdelamortquitue
+JWT_SECRET=xyogk3qaD9VZDytDkRpvaYebKav6KE6YDR3v8Z6116GXNF9W4GJ3V1yB7wnxv7Jp
 JWT_ACCESS_TOKEN_SECRET=supersecretaccess
 JWT_REFRESH_TOKEN_SECRET=supersecretrefresh
 JWT_ACCESS_TOKEN_EXPIRATION=15m

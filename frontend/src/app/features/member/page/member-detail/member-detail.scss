@@ -1,0 +1,172 @@
+@use 'variables' as *;
+
+.detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+
+    h2 { font-size: 2rem; color: white; }
+
+    .btn-back {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: $color-text-main;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: $transition-smooth;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: $color-accent-cream;
+      }
+    }
+  }
+
+  .glass-card {
+    background: $color-surface;
+    backdrop-filter: $glass-blur;
+    border: $glass-border;
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 24px;
+
+    h3 { 
+        margin-bottom: 24px;
+        font-size: 1.2rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 12px;
+    }
+
+    &.profile-card {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+
+      .user-avatar-large {
+        width: 80px;
+        height: 80px;
+        background: rgba($color-accent-cream, 0.1);
+        border: 2px solid $color-accent-cream;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 2rem;
+        color: $color-accent-cream;
+      }
+
+      .info-grid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+
+            label { 
+                font-size: 0.8rem; 
+                color: $color-text-muted; 
+                text-transform: uppercase; 
+                letter-spacing: 0.5px; 
+            }
+            span { 
+                font-size: 1rem; 
+                color: white; 
+            }
+            .mono { 
+                font-family: monospace;
+                color: $color-accent-cream;
+            }
+        }
+      }
+    }
+
+    &.admin-panel {
+      .role-form {
+        display: flex;
+        align-items: flex-end;
+        gap: 20px;
+
+        .input-group {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          label { color: $color-text-muted; font-size: 0.9rem; }
+          select {
+            padding: 14px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            
+            &:focus { border-color: $color-accent-cream; }
+            option { background: $color-bg-dark; }
+          }
+        }
+
+        .btn-primary {
+          padding: 14px 32px;
+          background: $color-accent-cream;
+          color: black;
+          border: none;
+          border-radius: 12px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: $transition-smooth;
+
+          &:disabled { opacity: 0.5; cursor: not-allowed; }
+          &:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(243, 229, 171, 0.2); }
+        }
+      }
+
+      .success-msg { margin-top: 16px; color: #4caf50; background: rgba(76, 175, 80, 0.1); padding: 12px; border-radius: 8px; text-align: center; }
+    }
+
+    &.danger-zone {
+      border-color: rgba(255, 82, 82, 0.3);
+      background: rgba(255, 82, 82, 0.05);
+
+      h3 { color: #ff5252; border-color: rgba(255, 82, 82, 0.2); }
+      p { 
+        color: $color-text-muted; 
+        margin-bottom: 24px; 
+      }
+
+      .btn-danger {
+        padding: 14px 24px;
+        background: #ff5252;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: $transition-smooth;
+
+        &:hover { 
+            background: #ff3333; 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 16px rgba(255, 82, 82, 0.2); 
+        }
+      }
+    }
+  }
+
+  .loading-state, .error-msg { 
+    text-align: center; 
+    padding: 60px; 
+    color: $color-text-muted; }
+}

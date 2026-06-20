@@ -5,7 +5,7 @@ import {
   provideBrowserGlobalErrorListeners,
   inject
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { AuthService } from '@core/auth/auth.service';
 import { provideHttpClient, withInterceptors, withFetch } from '@angular/common/http';
@@ -23,7 +23,7 @@ function initializeApp() {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding(),),
     provideZonelessChangeDetection(), 
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor]), withFetch()),
     provideAppInitializer(initializeApp),

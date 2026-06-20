@@ -1,0 +1,56 @@
+<div class="detail-container">
+  
+  <div class="header">
+    <button class="btn-back" routerLink="/dashboard/recipes">← Retour aux recettes</button>
+    
+    @if (recipe(); as r) {
+      <!-- Actions visibles uniquement si on est l'auteur ou un admin -->
+      @if (r.authorId === authService.currentUser()?.id || authService.currentUser()?.role === 'admin') {
+        <div class="actions">
+          <button [routerLink]="['/dashboard/recipes/edit', r.id]" class="btn-secondary">✏️ Modifier</button>
+          <button (click)="onDelete()" class="btn-danger">🗑️ Supprimer</button>
+        </div>
+      }
+    }
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">Chargement de la recette...</div>
+  } @else if (errorMessage()) {
+    <div class="error-state">{{ errorMessage() }}</div>
+  } @else if (recipe(); as r) {
+    <div class="glass-card recipe-content">
+      
+      <div class="recipe-banner">
+        <!-- Image de présentation (placeholder pour le moment) -->
+      </div>
+
+      <div class="recipe-header">
+        <h1>{{ r.title }}</h1>
+        <div class="meta-info">
+          <span class="badge time">⏱️ {{ r.preparationTime }} min</span>
+        </div>
+      </div>
+
+      <div class="recipe-body">
+        <section class="ingredients-box">
+          <h2>Ingrédients</h2>
+          <ul>
+            @for (ingredient of r.ingredients; track ingredient) {
+              <li><span class="bullet">•</span> {{ ingredient }}</li>
+            } @empty {
+              <li class="empty">Aucun ingrédient renseigné.</li>
+            }
+          </ul>
+        </section>
+
+        <section class="description-box">
+          <h2>Préparation</h2>
+          <!-- Préserve les sauts de ligne de la zone de texte -->
+          <p class="description-text">{{ r.description }}</p>
+        </section>
+      </div>
+
+    </div>
+  }
+</div>
