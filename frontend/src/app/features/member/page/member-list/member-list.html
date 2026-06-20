@@ -1,0 +1,51 @@
+<div class="admin-container">
+  <div class="header">
+    <h2>Gestion des Membres</h2>
+    <p class="subtitle">Espace réservé aux administrateurs.</p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading">Chargement des membres...</div>
+  } @else if (errorMessage()) {
+    <div class="error-msg">{{ errorMessage() }}</div>
+  } @else {
+    <div class="glass-table-wrapper">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Pseudo</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (member of members(); track member.id) {
+            <tr>
+              <!-- On affiche juste les 8 premiers caractères de l'ULID pour faire propre -->
+              <td class="id-cell">#{{ member.id.slice(0, 8) }}</td>
+              <td><strong>{{ member.nickname }}</strong></td>
+              <td>{{ member.email }}</td>
+              <td>
+                <span class="role-badge" [class.admin]="member.role === 'admin'">
+                  {{ member.role | uppercase }}
+                </span>
+              </td>
+
+              <!-- Actions "Pro" -->
+              <td class="text-right actions-cell">
+                <!-- Lien vers la page de détails -->
+                <button [routerLink]="['detail', member.id]" class="btn-icon">Détails</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty-state">Aucun membre trouvé.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>
